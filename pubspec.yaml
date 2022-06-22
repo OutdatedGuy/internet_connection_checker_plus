@@ -1,6 +1,6 @@
 name: internet_connection_checker_plus
 description: A pure Dart library that checks for internet by opening a socket to a list of specified addresses, each with individual port and timeout.
-version: 1.0.0
+version: 1.0.1
 homepage: https://outdatedguy.rocks
 repository: https://github.com/OutdatedGuy/internet_connection_checker_plus
 
