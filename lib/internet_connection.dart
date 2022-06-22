@@ -16,14 +16,12 @@ class InternetConnectionCheckerPlus {
     List<AddressCheckOptions>? addresses,
   }) {
     this.addresses = addresses ??
-        defaultAddresses
-            .map(
-              (AddressCheckOptions e) => AddressCheckOptions(
-                e.address,
-                port: e.port,
-                timeout: checkTimeout,
-              ),
-            )
+        _defaultAddresses
+            .map((options) => AddressCheckOptions(
+                  options.uri,
+                  headers: options.headers,
+                  timeout: checkTimeout,
+                ))
             .toList();
 
     // immediately perform an initial check so we know the last status?
@@ -42,94 +40,58 @@ class InternetConnectionCheckerPlus {
     };
   }
 
-  /// More info on why default port is 53
-  /// here:
-  /// - https://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers
-  /// - https://www.google.com/search?q=dns+server+port
-  static const int defaultPort = 53;
-
-  /// Default timeout is 10 seconds.
+  /// Default timeout is 4 seconds.
   ///
   /// Timeout is the number of seconds before a request is dropped
   /// and an address is considered unreachable
-  static const Duration defaultTimeout = Duration(seconds: 10);
+  static const Duration defaultTimeout = Duration(seconds: 4);
 
-  /// Default interval is 10 seconds
+  /// Default interval is 5 seconds
   ///
   /// Interval is the time between automatic checks
-  static const Duration defaultInterval = Duration(seconds: 10);
+  static const Duration defaultInterval = Duration(seconds: 5);
 
-  /// Predefined reliable addresses. This is opinionated
-  /// but should be enough. See https://www.dnsperf.com/#!dns-resolvers
+  /// The default parameters for DNS lookups
+  static const Map<String, String> dnsParameters = {
+    'name': 'google.com',
+    'type': 'A',
+    'dnssec': '1',
+  };
+
+  /// The default headers for DNS lookups
+  static const Map<String, String> dnsHeaders = {
+    'Accept': 'application/dns-json',
+    'Cache-Control': 'no-cache',
+    'Content-Type': 'application/json',
+  };
+
+  /// DNS over HTTPS info:
   ///
-  /// Addresses info:
-  ///
-  /// <!-- kinda hackish ^_^ -->
-  /// <style>
-  /// table {
-  ///   width: 100%;
-  ///   border-collapse: collapse;
-  /// }
-  /// th, td { padding: 5px; border: 1px solid lightgrey; }
-  /// thead { border-bottom: 2px solid lightgrey; }
-  /// </style>
-  ///
-  /// | Address        | Provider   | Info                                            |
-  /// |:---------------|:-----------|:------------------------------------------------|
-  /// | 1.1.1.1        | CloudFlare | https://1.1.1.1                                 |
-  /// | 1.0.0.1        | CloudFlare | https://1.1.1.1                                 |
-  /// | 8.8.8.8        | Google     | https://developers.google.com/speed/public-dns/ |
-  /// | 8.8.4.4        | Google     | https://developers.google.com/speed/public-dns/ |
-  /// | 208.67.222.222 | OpenDNS    | https://use.opendns.com/                        |
-  /// | 208.67.220.220 | OpenDNS    | https://use.opendns.com/                        |
-  static final List<AddressCheckOptions> defaultAddresses =
-      List<AddressCheckOptions>.unmodifiable(
-    <AddressCheckOptions>[
-      AddressCheckOptions(
-        InternetAddress(
-          '1.1.1.1', // CloudFlare
-          type: InternetAddressType.IPv4,
-        ),
+  /// | Address           | API                                            |
+  /// |:------------------|:-----------------------------------------------|
+  /// | 1.1.1.1           | https://cloudflare-dns.com/dns-query           |
+  /// | 1.0.0.1           | https://mozilla.cloudflare-dns.com/dns-query   |
+  static final List<AddressCheckOptions> _defaultAddresses = [
+    AddressCheckOptions(
+      Uri.parse('https://cloudflare-dns.com/dns-query').replace(
+        queryParameters: dnsParameters,
       ),
-      AddressCheckOptions(
-        InternetAddress(
-          '2606:4700:4700::1111', // CloudFlare
-          type: InternetAddressType.IPv6,
-        ),
+      headers: dnsHeaders,
+    ),
+    AddressCheckOptions(
+      Uri.parse('https://mozilla.cloudflare-dns.com/dns-query').replace(
+        queryParameters: dnsParameters,
       ),
-      AddressCheckOptions(
-        InternetAddress(
-          '8.8.4.4', // Google
-          type: InternetAddressType.IPv4,
-        ),
-      ),
-      AddressCheckOptions(
-        InternetAddress(
-          '2001:4860:4860::8888', // Google
-          type: InternetAddressType.IPv6,
-        ),
-      ),
-      AddressCheckOptions(
-        InternetAddress(
-          '208.67.222.222', // OpenDNS
-          type: InternetAddressType.IPv4,
-        ), // OpenDNS
-      ),
-      AddressCheckOptions(
-        InternetAddress(
-          '2620:0:ccc::2', // OpenDNS
-          type: InternetAddressType.IPv6,
-        ), // OpenDNS
-      ),
-    ],
-  );
+      headers: dnsHeaders,
+    ),
+  ];
 
   late List<AddressCheckOptions> _addresses;
 
   /// A list of internet addresses (with port and timeout) to ping.
   ///
   /// These should be globally available destinations.
-  /// Default is [defaultAddresses].
+  /// Default is [_defaultAddresses].
   ///
   /// When [hasConnection] or [connectionStatus] is called,
   /// this utility class tries to ping every address in this list.
@@ -153,20 +115,26 @@ class InternetConnectionCheckerPlus {
   Future<AddressCheckResult> isHostReachable(
     AddressCheckOptions options,
   ) async {
-    Socket? sock;
     try {
-      sock = await Socket.connect(
-        options.address,
-        options.port,
-        timeout: options.timeout,
-      )
-        ..destroy();
-      return AddressCheckResult(
-        options,
-        isSuccess: true,
-      );
-    } catch (e) {
-      sock?.destroy();
+      http.Response? response = await http
+          .get(
+            options.uri,
+            headers: options.headers,
+          )
+          .timeout(options.timeout);
+
+      if (response.statusCode == 200) {
+        return AddressCheckResult(
+          options,
+          isSuccess: true,
+        );
+      } else {
+        return AddressCheckResult(
+          options,
+          isSuccess: false,
+        );
+      }
+    } on Exception {
       return AddressCheckResult(
         options,
         isSuccess: false,
@@ -179,10 +147,6 @@ class InternetConnectionCheckerPlus {
   /// we assume an internet connection is available and return `true`.
   /// `false` otherwise.
   Future<bool> get hasConnection async {
-    if (kIsWeb) {
-      return html.window.navigator.onLine ?? false;
-    }
-
     final Completer<bool> result = Completer<bool>();
     int length = addresses.length;
 
@@ -221,13 +185,13 @@ class InternetConnectionCheckerPlus {
   /// If that's the case [onStatusChange] emits an update only if
   /// there's change from the previous status.
   ///
-  /// Defaults to [defaultInterval] (10 seconds).
+  /// Defaults to [defaultInterval] (5 seconds).
   final Duration checkInterval;
 
   /// The timeout period before a check request is dropped and an address is
   /// considered unreachable.
   ///
-  /// Defaults to [defaultTimeout] (10 seconds).
+  /// Defaults to [defaultTimeout] (4 seconds).
   final Duration checkTimeout;
 
   // Checks the current status, compares it with the last and emits

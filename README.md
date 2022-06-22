@@ -96,7 +96,7 @@ _Note: remember to properly cancel the `subscription` when it's no longer needed
 
 ## How it works
 
-All addresses are pinged simultaneously. On successful result (socket connection to address/port succeeds) a `true` boolean is pushed to a list, on failure (usually on timeout, default 10 sec) a `false` boolean is pushed to the same list.
+All addresses are pinged simultaneously. On successful result (socket connection to address/port succeeds) a `true` boolean is pushed to a list, on failure (usually on timeout, default 4 sec) a `false` boolean is pushed to the same list.
 
 When all the requests complete with either success or failure, a check is made to see if the list contains at least one `true` boolean. If it does, then an external address is available, so we have data connection. If all the values in this list are `false`, then we have no connection to the outside world of cute cat and dog pictures, so `hasConnection` also returns `false` too.
 
@@ -196,15 +196,15 @@ static const int defaultPort = 53;
 
 #### `defaultTimeout`
 
-... is 10 seconds.
+... is 4 seconds.
 
 ```dart
-static const Duration defaultTimeout = Duration(seconds: 10);
+static const Duration defaultTimeout = Duration(seconds: 4);
 ```
 
 #### `defaultInterval`
 
-... is 10 seconds. Interval is the time between automatic checks. Automatic
+... is 5 seconds. Interval is the time between automatic checks. Automatic
 checks start if there's a listener attached to `onStatusChange`, thus remember
 to cancel unneeded subscriptions.
 
@@ -213,7 +213,7 @@ to this value. You can change it if you need to perform checks more often
 or otherwise.
 
 ```dart
-static const Duration defaultInterval = const Duration(seconds: 10);
+static const Duration defaultInterval = const Duration(seconds: 5);
 ...
 Duration checkInterval = defaultInterval;
 ```

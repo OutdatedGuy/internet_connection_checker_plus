@@ -9,8 +9,8 @@ part of internet_connection_checker_plus;
 class AddressCheckOptions {
   /// [AddressCheckOptions] Constructor
   AddressCheckOptions(
-    this.address, {
-    this.port = InternetConnectionCheckerPlus.defaultPort,
+    this.uri, {
+    this.headers,
     this.timeout = InternetConnectionCheckerPlus.defaultTimeout,
   });
 
@@ -21,14 +21,14 @@ class AddressCheckOptions {
   /// An Internet address combined with a port number represents an
   /// endpoint to which a socket can connect or a listening socket can
   /// bind.
-  final InternetAddress address;
+  final Uri uri;
 
-  /// Port
-  final int port;
+  /// A map of additional headers to send with the request.
+  final Map<String, String>? headers;
 
   /// Timeout Duration
   final Duration timeout;
 
   @override
-  String toString() => 'AddressCheckOptions($address, $port, $timeout)';
+  String toString() => 'AddressCheckOptions($uri, $headers, $timeout)';
 }
