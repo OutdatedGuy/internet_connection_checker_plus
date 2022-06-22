@@ -41,7 +41,7 @@ the device is currently connected to the global network, e.i. has access to the 
 #### Add to Dependencies
 
 ```yaml
-internet_connection_checker_plus: ^0.0.1
+internet_connection_checker_plus: ^1.0.1
 ```
 
 #### Import the package
@@ -106,92 +106,30 @@ I believe this is a **_reliable_** and **_fast_** method to check if a data conn
 
 ## Defaults
 
-The defaults are based on data collected from <https://perfops.net/>, <https://www.dnsperf.com/#!dns-resolvers>
-
-Here's some more info about the defaults:
-
 #### `defaultAddresses`
 
-... includes the top 3 globally available free DNS resolvers.
+... includes the top 1 globally available free DNS over HTTPS resolver.
 
-| Address        | Provider   | Info                                              |
-| :------------- | :--------- | :------------------------------------------------ |
-| 1.1.1.1        | CloudFlare | <https://1.1.1.1>                                 |
-| 1.0.0.1        | CloudFlare | <https://1.1.1.1>                                 |
-| 8.8.8.8        | Google     | <https://developers.google.com/speed/public-dns/> |
-| 8.8.4.4        | Google     | <https://developers.google.com/speed/public-dns/> |
-| 208.67.222.222 | OpenDNS    | <https://use.opendns.com/>                        |
-| 208.67.220.220 | OpenDNS    | <https://use.opendns.com/>                        |
+| Address | API                                          |
+| :------ | :------------------------------------------- |
+| 1.1.1.1 | https://cloudflare-dns.com/dns-query         |
+| 1.0.0.1 | https://mozilla.cloudflare-dns.com/dns-query |
 
 ```dart
-static final List<AddressCheckOptions> defaultAddresses =
-      List<AddressCheckOptions>.unmodifiable(
-    <AddressCheckOptions>[
-      AddressCheckOptions(
-        InternetAddress(
-          '1.1.1.1', // CloudFlare
-          type: InternetAddressType.IPv4,
-        ),
-        port: defaultPort,
-        timeout: defaultTimeout,
-      ),
-      AddressCheckOptions(
-        InternetAddress(
-          '2606:4700:4700::1111', // CloudFlare
-          type: InternetAddressType.IPv6,
-        ),
-        port: defaultPort,
-        timeout: defaultTimeout,
-      ),
-      AddressCheckOptions(
-        InternetAddress(
-          '8.8.4.4', // Google
-          type: InternetAddressType.IPv4,
-        ),
-        port: defaultPort,
-        timeout: defaultTimeout,
-      ),
-      AddressCheckOptions(
-        InternetAddress(
-          '2001:4860:4860::8888', // Google
-          type: InternetAddressType.IPv6,
-        ),
-        port: defaultPort,
-        timeout: defaultTimeout,
-      ),
-      AddressCheckOptions(
-        InternetAddress(
-          '208.67.222.222', // OpenDNS
-          type: InternetAddressType.IPv4,
-        ), // OpenDNS
-        port: defaultPort,
-        timeout: defaultTimeout,
-      ),
-      AddressCheckOptions(
-        InternetAddress(
-          '2620:0:ccc::2', // OpenDNS
-          type: InternetAddressType.IPv6,
-        ), // OpenDNS
-        port: defaultPort,
-        timeout: defaultTimeout,
-      ),
-    ],
-  );
-```
-
-#### `defaultPort`
-
-... is 53.
-
-> A DNS server listens for requests on port 53 (both UDP and TCP). So all DNS requests are sent to port 53 ...
-
-More info:
-
-- <https://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers>
-- <https://www.google.com/search?q=dns+server+port>
-
-```dart
-static const int defaultPort = 53;
+static final List<AddressCheckOptions> _defaultAddresses = [
+  AddressCheckOptions(
+    Uri.parse('https://cloudflare-dns.com/dns-query').replace(
+      queryParameters: dnsParameters,
+    ),
+    headers: dnsHeaders,
+  ),
+  AddressCheckOptions(
+    Uri.parse('https://mozilla.cloudflare-dns.com/dns-query').replace(
+      queryParameters: dnsParameters,
+    ),
+    headers: dnsHeaders,
+  ),
+];
 ```
 
 #### `defaultTimeout`
@@ -237,10 +175,6 @@ main() async {
   print("Current status: ${await InternetConnectionCheckerPlus().connectionStatus}");
   // prints either InternetConnectionStatus.connected
   // or InternetConnectionStatus.disconnected
-
-  // This returns the last results from the last call
-  // to either hasConnection or connectionStatus
-  print("Last results: ${InternetConnectionCheckerPlus().lastTryResults}");
 
   // actively listen for status updates
   // this will cause InternetConnectionCheckerPlus to check periodically
