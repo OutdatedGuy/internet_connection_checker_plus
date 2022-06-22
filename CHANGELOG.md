@@ -1,3 +1,16 @@
+## [1.0.0] - 2022-06-23
+
+- **BREAKING CHANGES**
+
+  - Using `http` requests instead of `Socket` connections.
+  - Replaced `InternetAddress` with `Uri`.
+
+- **NEW FEATURES**
+
+  - Added **_proper_** `Web` support.
+  - Faster connection checks.
+  - Reduced latency.
+
 ## [0.0.1] - 2022-06-22
 
 - Initial Release
