@@ -38,6 +38,18 @@ the device is currently connected to the global network, e.i. has access to the 
 
 ## Quick start
 
+#### Add to Dependencies
+
+```yaml
+internet_connection_checker_plus: ^0.0.1
+```
+
+#### Import the package
+
+```dart
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+```
+
 `InternetConnectionCheckerPlus()` is actually a Singleton. Calling `InternetConnectionCheckerPlus()`
 is guaranteed to always return the same instance.
 
