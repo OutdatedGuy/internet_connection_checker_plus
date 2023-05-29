@@ -32,19 +32,17 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  InternetConnectionStatus? _connectionStatus;
-  late StreamSubscription<InternetConnectionStatus> _subscription;
+  InternetStatus? _connectionStatus;
+  late StreamSubscription<InternetStatus> _subscription;
 
   @override
   void initState() {
     super.initState();
-    _subscription = InternetConnectionCheckerPlus().onStatusChange.listen(
-      (status) {
-        setState(() {
-          _connectionStatus = status;
-        });
-      },
-    );
+    _subscription = InternetConnection().onStatusChange.listen((status) {
+      setState(() {
+        _connectionStatus = status;
+      });
+    });
   }
 
   @override
@@ -68,7 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Text(
               _connectionStatus?.toString() ?? 'Unknown',
-              style: Theme.of(context).textTheme.headline6,
+              style: Theme.of(context).textTheme.titleLarge,
             ),
           ],
         ),

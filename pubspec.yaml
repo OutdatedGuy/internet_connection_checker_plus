@@ -5,14 +5,15 @@ homepage: https://outdatedguy.rocks
 repository: https://github.com/OutdatedGuy/internet_connection_checker_plus
 
 environment:
-  sdk: ">=2.17.3 <3.0.0"
+  sdk: '>=3.0.2 <4.0.0'
   flutter: ">=1.17.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
-  http: ^0.13.4
+  http: ^1.0.0
+  connectivity_plus: ^4.0.1
 
 dev_dependencies:
   flutter_test:
