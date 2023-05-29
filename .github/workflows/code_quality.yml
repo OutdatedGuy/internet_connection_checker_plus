@@ -1,0 +1,44 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Check source code quality
+
+on:
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  lint:
+    name: Check lints
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+      - run: flutter --version
+
+      # Check for any formatting issues in the code.
+      - name: Verify formatting
+        run: dart format --set-exit-if-changed .
+
+  analyze:
+    name: Check code analysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+      - run: flutter --version
+
+      # Get flutter dependencies.
+      - name: Install dependencies
+        run: flutter pub get
+
+      # Statically analyze the Dart code for any errors.
+      - name: Analyze project source
+        run: flutter analyze .
