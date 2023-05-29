@@ -2,9 +2,13 @@ part of internet_connection_checker_plus;
 
 /// A utility class for checking internet connectivity status.
 ///
-/// This class provides functionality to monitor and verify internet connectivity by checking reachability
-/// to various [Uri]s. It relies on the `connectivity_plus` package for listening to connectivity changes
-/// and the `http` package for making network requests.
+/// This class provides functionality to monitor and verify internet
+/// connectivity by checking reachability to various [Uri]s. It relies on the
+/// [connectivity_plus] package for listening to connectivity changes and the
+/// [http][http_link] package for making network requests.
+///
+/// [connectivity_plus]: https://pub.dev/packages/connectivity_plus
+/// [http_link]: https://pub.dev/packages/http
 ///
 /// <br />
 ///
