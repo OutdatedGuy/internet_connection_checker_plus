@@ -155,6 +155,15 @@ The `InternetConnection` class uses the following `Uri`s by default:
 | `https://api.thecatapi.com/v1/images/search`        | CORS enabled, no-cache                                  |
 | `https://api.coindesk.com/v1/bpi/currentprice.json` | CORS enabled, no-cache                                  |
 
+## Credits
+
+This package is a cloned and modified version of the
+[internet_connection_checker] package which is a cloned and modified version of
+the [data_connection_checker] package which is no longer maintained.
+
+The aim of this package is to support the `web` platform which is currently not
+supported by the [internet_connection_checker] package.
+
 <!-- Badges URLs -->
 
 [package_svg]: https://img.shields.io/pub/v/internet_connection_checker_plus.svg?color=blueviolet
@@ -168,3 +177,5 @@ The `InternetConnection` class uses the following `Uri`s by default:
 [package]: https://pub.dev/packages/internet_connection_checker_plus
 [issues]: https://github.com/OutdatedGuy/internet_connection_checker_plus/issues
 [issues_closed]: https://github.com/OutdatedGuy/internet_connection_checker_plus/issues?q=is%3Aissue+is%3Aclosed
+[internet_connection_checker]: https://github.com/RounakTadvi/internet_connection_checker
+[data_connection_checker]: https://pub.dev/packages/data_connection_checker
