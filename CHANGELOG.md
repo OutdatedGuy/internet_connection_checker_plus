@@ -1,8 +1,17 @@
-## [1.0.1] - 2022-06-23
+## 2.0.0
+
+> ### Contains Breaking Changes
+
+- feat!: changed working logic by using `http` requests instead of `Socket` connections.
+- chore: updated example app to Flutter 3.10 template.
+- legal: updated licenses and added credits.
+- docs: updated readme to contains new working logic.
+
+## 1.0.1
 
 - Updated Readme
 
-## [1.0.0] - 2022-06-23
+## 1.0.0
 
 - **BREAKING CHANGES**
 
@@ -15,8 +24,8 @@
   - Faster connection checks.
   - Reduced latency.
 
-## [0.0.1] - 2022-06-22
+## 0.0.1
 
 - Initial Release
-- Forked from [internet_connection_checker](https://github.com/RounakTadvi/internet_connection_checker)
+- Cloned from [internet_connection_checker](https://github.com/RounakTadvi/internet_connection_checker)
 - Added Web Support
