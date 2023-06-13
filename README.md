@@ -1,4 +1,4 @@
-# internet_connection_checker_plus
+# Internet Connection Checker Plus
 
 A Flutter package to check your internet connection with subsecond response
 times, even on mobile networks!
