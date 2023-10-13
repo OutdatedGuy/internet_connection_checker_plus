@@ -1,3 +1,7 @@
+## 2.1.0
+
+- chore!: updated [connectivity_plus](https://pub.dev/packages/connectivity_plus) dependency to v5.0.0 in [99c8726](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/99c87262b0aefbd53aaab03f707cd7800471c8f6)
+
 ## 2.0.0
 
 > ### Contains Breaking Changes
