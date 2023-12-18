@@ -1,5 +1,7 @@
 part of internet_connection_checker_plus;
 
+typedef ResponseStatusFn = bool Function(http.Response response);
+
 /// Options for checking the internet connectivity to an address.
 ///
 /// This class provides a way to specify options for checking the connectivity
@@ -27,12 +29,17 @@ class InternetCheckOption {
   /// final options = InternetCheckOption(
   ///   uri: Uri.parse('https://example.com'),
   ///   timeout: Duration(seconds: 5),
+  ///   headers: {
+  ///      'Authorization': 'Bearer token',
+  ///   },
   /// );
   /// ```
   InternetCheckOption({
     required this.uri,
     this.timeout = const Duration(seconds: 3),
-  });
+    Map<String, String>? headers,
+    this.responseStatusFn,
+  }) : headers = headers ?? <String, String>{};
 
   /// URI to check for connectivity. A HEAD request will be made to this URI.
   ///
@@ -50,11 +57,18 @@ class InternetCheckOption {
   /// Defaults to 3 seconds.
   final Duration timeout;
 
+  /// A map of additional headers to send with the request.
+  final Map<String, String> headers;
+
+  /// A callback to check expected response
+  final ResponseStatusFn? responseStatusFn;
+
   @override
   String toString() {
     return 'InternetCheckOption(\n'
         '  uri: $uri,\n'
-        '  timeout: $timeout\n'
+        '  timeout: $timeout,\n'
+        '  headers: ${headers.toString()}\n'
         ')';
   }
 }

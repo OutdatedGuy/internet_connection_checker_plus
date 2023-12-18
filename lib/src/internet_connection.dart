@@ -127,11 +127,19 @@ class InternetConnection {
     InternetCheckOption option,
   ) async {
     try {
-      final response = await http.head(option.uri).timeout(option.timeout);
+      final response = await http
+          .head(
+            option.uri,
+            headers: option.headers,
+          )
+          .timeout(option.timeout);
+
+      ResponseStatusFn statusFn =
+          option.responseStatusFn ?? (response) => response.statusCode == 200;
 
       return InternetCheckResult(
         option: option,
-        isSuccess: response.statusCode == 200,
+        isSuccess: statusFn(response),
       );
     } catch (_) {
       return InternetCheckResult(

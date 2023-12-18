@@ -13,7 +13,8 @@ void main() {
 
       const expectedString = 'InternetCheckOption(\n'
           '  uri: https://example.com,\n'
-          '  timeout: 0:00:05.000000\n'
+          '  timeout: 0:00:05.000000,\n'
+          '  headers: {}\n'
           ')';
 
       expect(options.toString(), expectedString);
