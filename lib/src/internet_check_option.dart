@@ -1,4 +1,4 @@
-part of internet_connection_checker_plus;
+part of '../internet_connection_checker_plus.dart';
 
 /// A Callback Function to decide whether the request succeeded or not.
 typedef ResponseStatusFn = bool Function(http.Response response);

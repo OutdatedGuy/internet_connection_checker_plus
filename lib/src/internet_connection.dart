@@ -1,4 +1,4 @@
-part of internet_connection_checker_plus;
+part of '../internet_connection_checker_plus.dart';
 
 /// A utility class for checking internet connectivity status.
 ///
@@ -94,7 +94,9 @@ class InternetConnection {
     InternetCheckOption(
       uri: Uri.parse('https://jsonplaceholder.typicode.com/posts/1'),
     ),
-    InternetCheckOption(uri: Uri.parse('https://pokeapi.co/api/v2/pokemon/1')),
+    InternetCheckOption(
+      uri: Uri.parse('https://pokeapi.co/api/v2/pokemon?limit=1'),
+    ),
     InternetCheckOption(uri: Uri.parse('https://reqres.in/api/users/1')),
   ];
 
