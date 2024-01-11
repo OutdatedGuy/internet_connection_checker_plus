@@ -9,7 +9,8 @@ typedef ResponseStatusFn = bool Function(http.Response response);
 /// of an address. It includes the URI to check and the timeout duration for
 /// the HEAD request.
 ///
-/// Usage example:
+/// *Usage Example:*
+///
 /// ```dart
 /// final options = InternetCheckOption(
 ///   uri: Uri.parse('https://example.com'),
@@ -25,7 +26,8 @@ class InternetCheckOption {
   /// of an address. It includes the URI to check and the timeout duration for
   /// the HEAD request.
   ///
-  /// Usage example:
+  /// *Usage Example:*
+  ///
   /// ```dart
   /// final options = InternetCheckOption(
   ///   uri: Uri.parse('https://example.com'),
