@@ -127,11 +127,13 @@ class InternetConnection {
     InternetCheckOption option,
   ) async {
     try {
-      final response = await http.head(option.uri).timeout(option.timeout);
+      final response = await http
+          .head(option.uri, headers: option.headers)
+          .timeout(option.timeout);
 
       return InternetCheckResult(
         option: option,
-        isSuccess: response.statusCode == 200,
+        isSuccess: option.responseStatusFn(response),
       );
     } catch (_) {
       return InternetCheckResult(

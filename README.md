@@ -129,6 +129,30 @@ final connection = InternetConnection.createInstance(
 > On `web` platform, make sure the custom `Uri`s are not CORS blocked.
 > Otherwise, the results may be inaccurate.
 
+### 6. Add custom success criteria
+
+The `InternetConnection` class can be configured to check custom `Uri`s for
+internet connectivity using custom success criteria:
+
+```dart
+final connection = InternetConnection.createInstance(
+  customCheckOptions: [
+    InternetCheckOption(
+      uri: Uri.parse('https://example.com'),
+      responseStatusFn: (response) {
+        return response.statusCode >= 69 && response.statusCode < 169;
+      },
+    ),
+    InternetCheckOption(
+      uri: Uri.parse('https://example2.com'),
+      responseStatusFn: (response) {
+        return response.statusCode >= 420 && response.statusCode < 1412;
+      },
+    ),
+  ],
+);
+```
+
 #### Default `Uri`s
 
 The `InternetConnection` class uses the following `Uri`s by default:
