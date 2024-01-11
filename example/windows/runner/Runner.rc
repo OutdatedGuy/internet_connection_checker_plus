@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "rocks.outdatedguy" "\0"
-            VALUE "FileDescription", "internet_connection_checker_plus_example" "\0"
+            VALUE "CompanyName", "OutdatedGuy" "\0"
+            VALUE "FileDescription", "Internet Connection Checker Plus Example" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "internet_connection_checker_plus_example" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2024 rocks.outdatedguy. All rights reserved." "\0"
+            VALUE "InternalName", "Internet Connection Checker Plus Example" "\0"
+            VALUE "LegalCopyright", "Copyright © 2023 OutdatedGuy. All rights reserved." "\0"
             VALUE "OriginalFilename", "internet_connection_checker_plus_example.exe" "\0"
-            VALUE "ProductName", "internet_connection_checker_plus_example" "\0"
+            VALUE "ProductName", "Internet Connection Checker Plus Example" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
