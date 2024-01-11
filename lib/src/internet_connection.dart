@@ -66,7 +66,7 @@ class InternetConnection {
   ///
   /// The [useDefaultOptions] flag indicates whether to use the default [Uri]s.
   /// - If [useDefaultOptions] is `true` (default), the default [Uri]s will be
-  /// used.
+  /// used along with any [customCheckOptions] provided.
   ///
   /// - If [useDefaultOptions] is `false`, you must provide a non-empty
   /// [customCheckOptions] list.
@@ -75,10 +75,9 @@ class InternetConnection {
     List<InternetCheckOption>? customCheckOptions,
     bool useDefaultOptions = true,
   }) : assert(
-          useDefaultOptions ||
-              (customCheckOptions != null && customCheckOptions.isNotEmpty),
+          useDefaultOptions || customCheckOptions?.isNotEmpty == true,
           'You must provide a list of options if you are not using the '
-          'default ones',
+          'default ones.',
         ) {
     _internetCheckOptions = [
       if (useDefaultOptions) ..._defaultCheckOptions,
