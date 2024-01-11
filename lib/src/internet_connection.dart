@@ -66,7 +66,7 @@ class InternetConnection {
   ///
   /// The [useDefaultOptions] flag indicates whether to use the default [Uri]s.
   /// - If [useDefaultOptions] is `true` (default), the default [Uri]s will be
-  /// used.
+  /// used along with any [customCheckOptions] provided.
   ///
   /// - If [useDefaultOptions] is `false`, you must provide a non-empty
   /// [customCheckOptions] list.
