@@ -25,22 +25,18 @@ void main() {
 
     test('hasInternetAccess invoke responseStatusFn to determine success',
         () async {
-      await TestHttpClient.run((client) async {
-        client.responseBuilder =
-            (req) => TestHttpClient.createResponse(statusCode: 500);
-        const expectedStatus = true;
-        final checker = InternetConnection.createInstance(
-          customCheckOptions: [
-            InternetCheckOption(
-              uri: Uri.parse('https://www.example.com/nonexistent-page'),
-              responseStatusFn: (response) => expectedStatus,
-            ),
-          ],
-          useDefaultOptions: false,
-        );
+      const expectedStatus = true;
+      final checker = InternetConnection.createInstance(
+        customCheckOptions: [
+          InternetCheckOption(
+            uri: Uri.parse('https://www.example.com/nonexistent-page'),
+            responseStatusFn: (response) => expectedStatus,
+          ),
+        ],
+        useDefaultOptions: false,
+      );
 
-        expect(await checker.hasInternetAccess, expectedStatus);
-      });
+      expect(await checker.hasInternetAccess, expectedStatus);
     });
 
     test('hasInternetAccess send custom header on request', () async {
