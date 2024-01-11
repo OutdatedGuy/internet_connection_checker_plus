@@ -1,11 +1,11 @@
-// Dart Packages
-import 'dart:async';
-
 // Flutter Packages
 import 'package:flutter/material.dart';
 
-// This Package
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+// Pages
+import 'package:example/pages/custom_success_criteria.dart';
+import 'package:example/pages/custom_uris.dart';
+import 'package:example/pages/listen_once.dart';
+import 'package:example/pages/listen_to_stream.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,59 +22,44 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Internet Connection Checker Plus Demo'),
+      home: MyHomePage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class MyHomePage extends StatelessWidget {
+  MyHomePage({super.key});
 
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  InternetStatus? _connectionStatus;
-  late StreamSubscription<InternetStatus> _subscription;
-
-  @override
-  void initState() {
-    super.initState();
-    _subscription = InternetConnection().onStatusChange.listen((status) {
-      setState(() {
-        _connectionStatus = status;
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    _subscription.cancel();
-    super.dispose();
-  }
+  final pages = {
+    'Listen Once': const ListenOnce(),
+    'Listen to Stream': const ListenToStream(),
+    'Custom URIs': const CustomURIs(),
+    'Custom Success Criteria': const CustomSuccessCriteria(),
+  };
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+        title: const Text('Internet Connection Checker Plus Demo'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'Your internet connection status is:',
-            ),
-            Text(
-              _connectionStatus?.toString() ?? 'Unknown',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-          ],
+          children: pages.entries.map((entry) {
+            return Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: ElevatedButton(
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => entry.value,
+                  ),
+                ),
+                child: Text(entry.key),
+              ),
+            );
+          }).toList(),
         ),
       ),
     );
