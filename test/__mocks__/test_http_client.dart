@@ -1,13 +1,15 @@
 import 'package:http/http.dart' as http;
 
 typedef TestHttpResponseBuilder = http.Response Function(
-    http.BaseRequest request);
+  http.BaseRequest request,
+);
 
 class TestHttpClient extends http.BaseClient {
   TestHttpResponseBuilder? responseBuilder;
 
   static Future<void> run(
-      Future<void> Function(TestHttpClient client) fn) async {
+    Future<void> Function(TestHttpClient client) fn,
+  ) async {
     final client = TestHttpClient();
     await http.runWithClient(
       () => fn(client),

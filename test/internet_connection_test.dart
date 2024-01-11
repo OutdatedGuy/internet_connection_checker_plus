@@ -23,21 +23,23 @@ void main() {
       expect(await checker.hasInternetAccess, false);
     });
 
-    test('hasInternetAccess invoke responseStatusFn to determine success',
-        () async {
-      const expectedStatus = true;
-      final checker = InternetConnection.createInstance(
-        customCheckOptions: [
-          InternetCheckOption(
-            uri: Uri.parse('https://www.example.com/nonexistent-page'),
-            responseStatusFn: (response) => expectedStatus,
-          ),
-        ],
-        useDefaultOptions: false,
-      );
+    test(
+      'hasInternetAccess invoke responseStatusFn to determine success',
+      () async {
+        const expectedStatus = true;
+        final checker = InternetConnection.createInstance(
+          customCheckOptions: [
+            InternetCheckOption(
+              uri: Uri.parse('https://www.example.com/nonexistent-page'),
+              responseStatusFn: (response) => expectedStatus,
+            ),
+          ],
+          useDefaultOptions: false,
+        );
 
-      expect(await checker.hasInternetAccess, expectedStatus);
-    });
+        expect(await checker.hasInternetAccess, expectedStatus);
+      },
+    );
 
     test('hasInternetAccess send custom header on request', () async {
       await TestHttpClient.run((client) async {
