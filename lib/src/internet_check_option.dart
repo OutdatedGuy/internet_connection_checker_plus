@@ -1,5 +1,6 @@
 part of internet_connection_checker_plus;
 
+// A Callback Function to decide whether the request succeeded or not.
 typedef ResponseStatusFn = bool Function(http.Response response);
 
 /// Options for checking the internet connectivity to an address.
@@ -34,12 +35,28 @@ class InternetCheckOption {
   ///   },
   /// );
   /// ```
+  ///
+  /// * with custom responseStatus callback:
+  /// ```dart
+  /// final options = InternetCheckOption(
+  ///   uri: Uri.parse('https://example.com'),
+  ///   timeout: Duration(seconds: 5),
+  ///   headers: {
+  ///      'Authorization': 'Bearer token',
+  ///   },
+  ///   reponseStatusFn: (response) => response.statusCode>=200 && response.statusCode<300,
+  /// );
+  /// ```
   InternetCheckOption({
     required this.uri,
     this.timeout = const Duration(seconds: 3),
-    Map<String, String>? headers,
-    this.responseStatusFn,
-  }) : headers = headers ?? <String, String>{};
+    this.headers = const {},
+    ResponseStatusFn? responseStatusFn,
+  }) : responseStatusFn = responseStatusFn ?? defaultResponseStatusFn;
+
+  /// The default [responseStatusFn], it will consider success if the status code is 200
+  static ResponseStatusFn defaultResponseStatusFn =
+      (response) => response.statusCode == 200;
 
   /// URI to check for connectivity. A HEAD request will be made to this URI.
   ///
@@ -60,8 +77,15 @@ class InternetCheckOption {
   /// A map of additional headers to send with the request.
   final Map<String, String> headers;
 
-  /// A callback to check expected response
-  final ResponseStatusFn? responseStatusFn;
+  /// A custom callback function to decide whether the request succeeded or not.
+  ///
+  /// It is useful if your [uri] return non 200 status code.
+  ///
+  /// Usage example:
+  /// ```dart
+  /// responseStatusFn: (response) => response.statusCode>=200 && response.statusCode<300
+  /// ```
+  final ResponseStatusFn responseStatusFn;
 
   @override
   String toString() {

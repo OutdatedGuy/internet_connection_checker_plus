@@ -128,18 +128,12 @@ class InternetConnection {
   ) async {
     try {
       final response = await http
-          .head(
-            option.uri,
-            headers: option.headers,
-          )
+          .head(option.uri, headers: option.headers)
           .timeout(option.timeout);
-
-      ResponseStatusFn statusFn =
-          option.responseStatusFn ?? (response) => response.statusCode == 200;
 
       return InternetCheckResult(
         option: option,
-        isSuccess: statusFn(response),
+        isSuccess: option.responseStatusFn(response),
       );
     } catch (_) {
       return InternetCheckResult(
