@@ -2,10 +2,10 @@
 import 'package:flutter/material.dart';
 
 // Pages
-import 'package:example/pages/custom_success_criteria.dart';
-import 'package:example/pages/custom_uris.dart';
-import 'package:example/pages/listen_once.dart';
-import 'package:example/pages/listen_to_stream.dart';
+import 'pages/custom_success_criteria.dart';
+import 'pages/custom_uris.dart';
+import 'pages/listen_once.dart';
+import 'pages/listen_to_stream.dart';
 
 void main() {
   runApp(const MyApp());
