@@ -1,4 +1,4 @@
-part of internet_connection_checker_plus;
+part of '../internet_connection_checker_plus.dart';
 
 /// Represents the result of an internet connection check.
 ///
