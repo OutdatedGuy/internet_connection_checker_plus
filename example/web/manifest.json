@@ -1,11 +1,11 @@
 {
-    "name": "example",
-    "short_name": "example",
+    "name": "internet_connection_checker_plus_example",
+    "short_name": "internet_connection_checker_plus_example",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Demonstrates how to use the internet_connection_checker_plus package.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

@@ -1,6 +1,6 @@
-# example
+# internet_connection_checker_plus_example
 
-A new Flutter project.
+Demonstrates how to use the internet_connection_checker_plus package.
 
 ## Getting Started
 
