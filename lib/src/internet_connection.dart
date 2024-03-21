@@ -221,7 +221,7 @@ class InternetConnection {
   Stream<InternetStatus> get onStatusChange => _statusController.stream;
 
   /// Connectivity subscription.
-  StreamSubscription<ConnectivityResult>? _connectivitySubscription;
+  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
 
   /// Starts listening to connectivity changes from [connectivity_plus] package
   /// using the [Connectivity.onConnectivityChanged] stream.
@@ -230,7 +230,7 @@ class InternetConnection {
   void _startListeningToConnectivityChanges() {
     if (_connectivitySubscription != null) return;
     _connectivitySubscription = Connectivity().onConnectivityChanged.listen(
-      (connectivityResult) {
+      (_) {
         if (_statusController.hasListener) {
           _maybeEmitStatusUpdate();
         }
