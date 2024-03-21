@@ -1,3 +1,7 @@
+## 2.3.0
+
+- chore!: updated [connectivity_plus](https://pub.dev/packages/connectivity_plus) dependency to v6.0.1 in [d2d9019](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/d2d9019dc1cf317ba25a29e9f72c991828c86869)
+
 ## 2.2.0
 
 - feat: added custom headers and success criteria function in [acec1e6](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/acec1e65c14510d4cb05e9f7b73e8b7972b271d8). Thanks [@tatashidayat](https://github.com/tatashidayat) for [#18](https://github.com/OutdatedGuy/internet_connection_checker_plus/pull/18)
