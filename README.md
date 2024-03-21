@@ -61,7 +61,7 @@ Add the `internet_connection_checker_plus` package to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  internet_connection_checker_plus: ^2.2.0
+  internet_connection_checker_plus: ^2.3.0
 ```
 
 ### 2. Import the package
