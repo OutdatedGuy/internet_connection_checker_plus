@@ -1,0 +1,32 @@
+# dart run package_rename
+package_rename_config:
+  android:
+    app_name: Internet Connection Checker Plus Example
+    package_name: rocks.outdatedguy.internet_connection_checker_plus_example
+    override_old_package: rocks.outdatedguy.internet_connection_checker_plus_example
+    lang: kotlin
+
+  ios:
+    app_name: Internet Connection Checker Plus Example
+    bundle_name: Internet Check Demo
+    package_name: rocks.outdatedguy.internet_connection_checker_plus_example
+
+  linux:
+    app_name: Internet Connection Checker Plus Example
+    package_name: rocks.outdatedguy.internet_connection_checker_plus_example
+    exe_name: internetcheck-linux-x64
+
+  macos:
+    app_name: Internet Connection Checker Plus Example
+    package_name: rocks.outdatedguy.internet_connection_checker_plus_example
+    copyright_notice: Copyright © 2023 OutdatedGuy. All rights reserved.
+
+  web:
+    app_name: Internet Connection Checker Plus Example
+    description: Demonstrates how to use the internet_connection_checker_plus package.
+
+  windows:
+    app_name: Internet Connection Checker Plus Example
+    organization: OutdatedGuy
+    copyright_notice: Copyright © 2023 OutdatedGuy. All rights reserved.
+    exe_name: internetcheck-win32

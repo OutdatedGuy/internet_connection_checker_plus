@@ -94,7 +94,7 @@ BEGIN
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "Internet Connection Checker Plus Example" "\0"
             VALUE "LegalCopyright", "Copyright © 2023 OutdatedGuy. All rights reserved." "\0"
-            VALUE "OriginalFilename", "internet_connection_checker_plus_example.exe" "\0"
+            VALUE "OriginalFilename", "internetcheck-win32.exe" "\0"
             VALUE "ProductName", "Internet Connection Checker Plus Example" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
