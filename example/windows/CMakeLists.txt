@@ -4,7 +4,7 @@ project(internet_connection_checker_plus_example LANGUAGES CXX)
 
 # The name of the executable created for the application. Change this to change
 # the on-disk name of your application.
-set(BINARY_NAME "internet_connection_checker_plus_example")
+set(BINARY_NAME "internetcheck-win32")
 
 # Explicitly opt in to modern CMake behaviors to avoid warnings with recent
 # versions of CMake.
