@@ -18,7 +18,7 @@ package_rename_config:
 
   macos:
     app_name: Internet Connection Checker Plus Example
-    package_name: rocks.outdatedguy.internet_connection_checker_plus_example
+    package_name: rocks.outdatedguy.internet-connection-checker-plus-example
     copyright_notice: Copyright © 2023 OutdatedGuy. All rights reserved.
 
   web:
