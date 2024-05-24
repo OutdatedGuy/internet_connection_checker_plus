@@ -5,7 +5,7 @@ homepage: https://outdatedguy.rocks
 repository: https://github.com/OutdatedGuy/internet_connection_checker_plus
 
 environment:
-  sdk: '>=3.3.1 <4.0.0'
+  sdk: '>=3.4.1 <4.0.0'
   flutter: ">=1.17.0"
 
 dependencies:
