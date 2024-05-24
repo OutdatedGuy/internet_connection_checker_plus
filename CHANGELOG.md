@@ -1,3 +1,9 @@
+## 2.4.0
+
+- perf: using isolates for http requests in [826a9b0](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/826a9b069896073ee69d5dcfb21d1a027ebaf876)
+- perf: updated default uri to use 4x less data in [3fa1ed8](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/3fa1ed8ddcfae5122a2cb51b42ae67ae1f8df028)
+- chore: updated example app to Flutter 3.22 template in [a5ae1f9](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/a5ae1f999420caca9f7538a95c727f84c309b59c)
+
 ## 2.3.0
 
 - chore!: updated [connectivity_plus](https://pub.dev/packages/connectivity_plus) dependency to v6.0.1 in [d2d9019](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/d2d9019dc1cf317ba25a29e9f72c991828c86869)
