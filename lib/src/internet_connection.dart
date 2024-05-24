@@ -92,7 +92,7 @@ class InternetConnection {
   final List<InternetCheckOption> _defaultCheckOptions = [
     InternetCheckOption(uri: Uri.parse('https://icanhazip.com/')),
     InternetCheckOption(
-      uri: Uri.parse('https://jsonplaceholder.typicode.com/posts/1'),
+      uri: Uri.parse('https://jsonplaceholder.typicode.com/todos/1'),
     ),
     InternetCheckOption(
       uri: Uri.parse('https://pokeapi.co/api/v2/pokemon?limit=1'),
