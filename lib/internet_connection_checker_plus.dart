@@ -61,6 +61,7 @@ library internet_connection_checker_plus;
 
 // Dart Packages
 import 'dart:async';
+import 'dart:isolate';
 
 // Third Party Packages
 import 'package:connectivity_plus/connectivity_plus.dart';
