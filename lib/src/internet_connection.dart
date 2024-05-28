@@ -128,11 +128,11 @@ class InternetConnection {
     InternetCheckOption option,
   ) async {
     try {
-      final response = await Isolate.run(() {
+      final response = await compute((_) {
         return http
             .head(option.uri, headers: option.headers)
             .timeout(option.timeout);
-      });
+      }, null);
 
       return InternetCheckResult(
         option: option,
