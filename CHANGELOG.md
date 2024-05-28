@@ -1,3 +1,7 @@
+## 2.4.1
+
+- fix(web): dart isolates not working on web platform in [fa57142](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/fa571420061af109fc85c4150825b19645fe8b1a)
+
 ## 2.4.0
 
 - perf: using isolates for http requests in [826a9b0](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/826a9b069896073ee69d5dcfb21d1a027ebaf876)
