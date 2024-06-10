@@ -1,3 +1,7 @@
+## 2.4.2
+
+- docs: updated the default urls used for connection check in [d66ff76](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/d66ff768e6a1722f32e044412391ffa488afeee2)
+
 ## 2.4.1
 
 - fix(web): dart isolates not working on web platform in [fa57142](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/fa571420061af109fc85c4150825b19645fe8b1a)
