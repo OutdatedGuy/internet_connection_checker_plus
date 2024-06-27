@@ -71,7 +71,7 @@ class InternetConnection {
   /// - If [useDefaultOptions] is `false`, you must provide a non-empty
   /// [customCheckOptions] list.
   InternetConnection.createInstance({
-    this.checkInterval = const Duration(seconds: 5),
+    this.checkInterval = const Duration(seconds: 10),
     List<InternetCheckOption>? customCheckOptions,
     bool useDefaultOptions = true,
   }) : assert(
