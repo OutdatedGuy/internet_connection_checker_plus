@@ -179,6 +179,8 @@ The `InternetConnection` class uses the following `Uri`s by default:
 | `https://api.thecatapi.com/v1/images/search`        | CORS enabled, no-cache                                  |
 | `https://api.coindesk.com/v1/bpi/currentprice.json` | CORS enabled, no-cache                                  |
 
+### If you liked the package, then please give it a [Like 👍🏼][package] and [Star ⭐][repository]
+
 ## Credits
 
 This package is a cloned and modified version of the
@@ -199,6 +201,7 @@ supported by the [internet_connection_checker] package.
 
 [Flutter Networking Documentation]: https://docs.flutter.dev/data-and-backend/networking
 [package]: https://pub.dev/packages/internet_connection_checker_plus
+[repository]: https://github.com/OutdatedGuy/internet_connection_checker_plus
 [issues]: https://github.com/OutdatedGuy/internet_connection_checker_plus/issues
 [issues_closed]: https://github.com/OutdatedGuy/internet_connection_checker_plus/issues?q=is%3Aissue+is%3Aclosed
 [internet_connection_checker]: https://github.com/RounakTadvi/internet_connection_checker
