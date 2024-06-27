@@ -23,10 +23,21 @@ class _CustomURIsState extends State<CustomURIs> {
     super.initState();
     _subscription = InternetConnection.createInstance(
       customCheckOptions: [
-        InternetCheckOption(uri: Uri.parse('https://icanhazip.com')),
+        InternetCheckOption(uri: Uri.parse('https://ipapi.co/ip')),
         InternetCheckOption(
-          uri: Uri.parse('https://jsonplaceholder.typicode.com/posts/1'),
+          uri: Uri.parse('https://api.adviceslip.com/advice'),
         ),
+        InternetCheckOption(
+          uri: Uri.parse('https://api.bitbucket.org/2.0/repositories'),
+        ),
+        InternetCheckOption(
+          uri: Uri.parse('https://api.thecatapi.com/v1/images/search'),
+        ),
+        InternetCheckOption(
+          uri: Uri.parse('https://api.coindesk.com/v1/bpi/currentprice.json'),
+        ),
+        InternetCheckOption(uri: Uri.parse('https://lenta.ru')),
+        InternetCheckOption(uri: Uri.parse('https://www.gazeta.ru')),
       ],
       useDefaultOptions: false,
     ).onStatusChange.listen((status) {

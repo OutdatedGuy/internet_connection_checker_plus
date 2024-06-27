@@ -166,18 +166,15 @@ The `InternetConnection` class uses the following `Uri`s by default:
 
 #### Some Tested URIs
 
-| URI                                                 | Description                                             |
-| :-------------------------------------------------- | :------------------------------------------------------ |
-| `https://ifconfig.me/ip`                            | Payload is less than `50` bytes, CORS enabled, no-cache |
-| `https://ipecho.net/plain`                          | Payload is less than `50` bytes, CORS enabled, no-cache |
-| `https://lenta.ru`                                  | Russia supported, CORS enabled, no-cache                |
-| `https://www.gazeta.ru`                             | Russia supported, CORS enabled, no-cache                |
-| `https://ipapi.co/ip`                               | CORS enabled, no-cache                                  |
-| `https://api.adviceslip.com/advice`                 | CORS enabled, no-cache                                  |
-| `https://api.bitbucket.org/2.0/repositories`        | CORS enabled, no-cache                                  |
-| `https://www.boredapi.com/api/activity`             | CORS enabled, no-cache                                  |
-| `https://api.thecatapi.com/v1/images/search`        | CORS enabled, no-cache                                  |
-| `https://api.coindesk.com/v1/bpi/currentprice.json` | CORS enabled, no-cache                                  |
+| URI                                                 | Description                              |
+| :-------------------------------------------------- | :--------------------------------------- |
+| `https://ipapi.co/ip`                               | CORS enabled, no-cache                   |
+| `https://api.adviceslip.com/advice`                 | CORS enabled, no-cache                   |
+| `https://api.bitbucket.org/2.0/repositories`        | CORS enabled, no-cache                   |
+| `https://api.thecatapi.com/v1/images/search`        | CORS enabled, no-cache                   |
+| `https://api.coindesk.com/v1/bpi/currentprice.json` | CORS enabled, no-cache                   |
+| `https://lenta.ru`                                  | Russia supported, CORS enabled, no-cache |
+| `https://www.gazeta.ru`                             | Russia supported, CORS enabled, no-cache |
 
 ## Credits
 
