@@ -1,3 +1,4 @@
+// Third Party Packages
 import 'package:http/http.dart' as http;
 
 typedef TestHttpResponseBuilder = http.Response Function(
@@ -17,8 +18,9 @@ class TestHttpClient extends http.BaseClient {
     );
   }
 
-  static http.Response createResponse({String? body, int statusCode = 200}) =>
-      http.Response(body ?? '', statusCode);
+  static http.Response createResponse({String? body, int statusCode = 200}) {
+    return http.Response(body ?? '', statusCode);
+  }
 
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) async {
