@@ -90,12 +90,10 @@ class InternetConnection {
 
   /// The default list of [Uri]s used for checking internet reachability.
   final List<InternetCheckOption> _defaultCheckOptions = [
+    InternetCheckOption(uri: Uri.parse('https://one.one.one.one')),
     InternetCheckOption(uri: Uri.parse('https://icanhazip.com/')),
     InternetCheckOption(
       uri: Uri.parse('https://jsonplaceholder.typicode.com/todos/1'),
-    ),
-    InternetCheckOption(
-      uri: Uri.parse('https://pokeapi.co/api/v2/pokemon?limit=1'),
     ),
     InternetCheckOption(uri: Uri.parse('https://reqres.in/api/users/1')),
   ];
