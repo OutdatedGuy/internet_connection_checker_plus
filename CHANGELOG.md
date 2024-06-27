@@ -1,3 +1,9 @@
+## 2.5.0
+
+- feat: use cloudflare domain for faster checks in [ffc4e84](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/ffc4e84a45eb3b72d2db6ef24b20363dec612647)
+- refactor: increased check interval to 10s in [2c02ba3](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/2c02ba3620c044c441cd1996dfdcf080e22e3d07)
+- docs: updated the tested URIs for the newer version in [6ae97e6](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/6ae97e68ecd666e29873804d2effc1485d0e8bfc)
+
 ## 2.4.2
 
 - docs: updated the default urls used for connection check in [d66ff76](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/d66ff768e6a1722f32e044412391ffa488afeee2)
