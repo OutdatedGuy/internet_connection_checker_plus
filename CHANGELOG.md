@@ -1,3 +1,7 @@
+## 2.5.1
+
+- refactor: lowered sdk constraints to support dart 2.15 and above
+
 ## 2.5.0
 
 - feat: use cloudflare domain for faster checks in [ffc4e84](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/ffc4e84a45eb3b72d2db6ef24b20363dec612647)
