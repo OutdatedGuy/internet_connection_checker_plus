@@ -126,11 +126,9 @@ class InternetConnection {
     InternetCheckOption option,
   ) async {
     try {
-      final response = await compute((_) {
-        return http
-            .head(option.uri, headers: option.headers)
-            .timeout(option.timeout);
-      }, null);
+      final response = await http
+          .head(option.uri, headers: option.headers)
+          .timeout(option.timeout);
 
       return InternetCheckResult(
         option: option,
