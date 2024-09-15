@@ -1,3 +1,9 @@
+## 2.5.2
+
+- refactor: removed unnecessary `compute` function in [33e1a55](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/33e1a55743ac6924d31300913991ecc3b3ba85a3)
+- chore: updated example app to Flutter 3.24 template in [93071f9](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/93071f9f444a0d11c8760d63fb8b6c52432baa2d)
+- docs: added instructions to pause internet checking when app goes to backgroud in [071dcf6](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/071dcf6f278218795b72a582350dbed15132024d)
+
 ## 2.5.1
 
 - refactor: lowered sdk constraints to support dart 2.15 and above
