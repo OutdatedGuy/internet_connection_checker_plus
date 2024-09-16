@@ -119,12 +119,12 @@ final connection = InternetConnection.createInstance(
 );
 ```
 
-> **Note**
+> [!IMPORTANT]
 >
 > Make sure the custom `Uri`s have no caching enabled. Otherwise, the results
 > may be inaccurate.
 
-> **Note**
+> [!IMPORTANT]
 >
 > On `web` platform, make sure the custom `Uri`s are not CORS blocked.
 > Otherwise, the results may be inaccurate.
@@ -151,6 +151,51 @@ final connection = InternetConnection.createInstance(
     ),
   ],
 );
+```
+
+### 7. Pause and Resume on App Lifecycle Changes
+
+For situation where you want to pause any network requests when the app goes
+into the background and resume them when the app comes back into the foreground
+(see [issue #27]):
+
+```dart
+class MyWidget extends StatefulWidget {
+  const MyWidget({super.key});
+
+  @override
+  State<MyWidget> createState() => _MyWidgetState();
+}
+
+class _MyWidgetState extends State<MyWidget> {
+  late final StreamSubscription<InternetStatus> _subscription;
+  late final AppLifecycleListener _listener;
+
+  @override
+  void initState() {
+    super.initState();
+    _subscription = InternetConnection().onStatusChange.listen((status) {
+      // Handle internet status changes
+    });
+    _listener = AppLifecycleListener(
+      onResume: _subscription.resume,
+      onHide: _subscription.pause,
+      onPause: _subscription.pause,
+    );
+  }
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    _listener.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Build your widget
+  }
+}
 ```
 
 #### Default `Uri`s
@@ -203,3 +248,4 @@ supported by the [internet_connection_checker] package.
 [issues_closed]: https://github.com/OutdatedGuy/internet_connection_checker_plus/issues?q=is%3Aissue+is%3Aclosed
 [internet_connection_checker]: https://github.com/RounakTadvi/internet_connection_checker
 [data_connection_checker]: https://pub.dev/packages/data_connection_checker
+[issue #27]: https://github.com/OutdatedGuy/internet_connection_checker_plus/issues/27
