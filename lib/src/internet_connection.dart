@@ -71,10 +71,11 @@ class InternetConnection {
   /// - If [useDefaultOptions] is `false`, you must provide a non-empty
   /// [customCheckOptions] list.
   InternetConnection.createInstance({
-    this.checkInterval = const Duration(seconds: 10),
+    Duration? checkInterval,
     List<InternetCheckOption>? customCheckOptions,
     bool useDefaultOptions = true,
-  }) : assert(
+  })  : _checkInterval = checkInterval ?? _defaultCheckInterval,
+        assert(
           useDefaultOptions || customCheckOptions?.isNotEmpty == true,
           'You must provide a list of options if you are not using the '
           'default ones.',
@@ -87,6 +88,9 @@ class InternetConnection {
     _statusController.onListen = _maybeEmitStatusUpdate;
     _statusController.onCancel = _handleStatusChangeCancel;
   }
+
+  /// The default check interval.
+  static const Duration _defaultCheckInterval = Duration(seconds: 10);
 
   /// The default list of [Uri]s used for checking internet reachability.
   final List<InternetCheckOption> _defaultCheckOptions = [
@@ -109,8 +113,8 @@ class InternetConnection {
 
   /// The duration between consecutive status checks.
   ///
-  /// Defaults to 5 seconds.
-  final Duration checkInterval;
+  /// Defaults to [_defaultCheckInterval].
+  Duration _checkInterval;
 
   /// The last known internet connection status result.
   InternetStatus? _lastStatus;
@@ -126,9 +130,7 @@ class InternetConnection {
     InternetCheckOption option,
   ) async {
     try {
-      final response = await http
-          .head(option.uri, headers: option.headers)
-          .timeout(option.timeout);
+      final response = await http.head(option.uri, headers: option.headers).timeout(option.timeout);
 
       return InternetCheckResult(
         option: option,
@@ -140,6 +142,18 @@ class InternetConnection {
         isSuccess: false,
       );
     }
+  }
+
+  /// Allows to change existing [_checkInterval].
+  set checkInterval(Duration duration) {
+    _checkInterval = duration;
+    _timerHandle?.cancel();
+    _timerHandle = Timer(_checkInterval, _maybeEmitStatusUpdate);
+  }
+
+  /// Returns current [_checkInterval].
+  Duration get checkInterval {
+    return _checkInterval;
   }
 
   /// Checks if there is internet access by verifying connectivity to the
@@ -174,9 +188,8 @@ class InternetConnection {
   ///
   /// Returns a [Future] that completes with the [InternetStatus] indicating
   /// the current internet connection status.
-  Future<InternetStatus> get internetStatus async => await hasInternetAccess
-      ? InternetStatus.connected
-      : InternetStatus.disconnected;
+  Future<InternetStatus> get internetStatus async =>
+      await hasInternetAccess ? InternetStatus.connected : InternetStatus.disconnected;
 
   /// Internal method for emitting status updates.
   ///
@@ -193,7 +206,7 @@ class InternetConnection {
       _statusController.add(currentStatus);
     }
 
-    _timerHandle = Timer(checkInterval, _maybeEmitStatusUpdate);
+    _timerHandle = Timer(_checkInterval, _maybeEmitStatusUpdate);
 
     _lastStatus = currentStatus;
   }
