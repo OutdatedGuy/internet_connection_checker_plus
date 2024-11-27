@@ -130,7 +130,9 @@ class InternetConnection {
     InternetCheckOption option,
   ) async {
     try {
-      final response = await http.head(option.uri, headers: option.headers).timeout(option.timeout);
+      final response = await http
+          .head(option.uri, headers: option.headers)
+          .timeout(option.timeout);
 
       return InternetCheckResult(
         option: option,
@@ -190,8 +192,9 @@ class InternetConnection {
   ///
   /// Returns a [Future] that completes with the [InternetStatus] indicating
   /// the current internet connection status.
-  Future<InternetStatus> get internetStatus async =>
-      await hasInternetAccess ? InternetStatus.connected : InternetStatus.disconnected;
+  Future<InternetStatus> get internetStatus async => await hasInternetAccess
+      ? InternetStatus.connected
+      : InternetStatus.disconnected;
 
   /// Internal method for emitting status updates.
   ///
