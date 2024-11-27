@@ -145,7 +145,9 @@ class InternetConnection {
   }
 
   /// Allows to change existing [_checkInterval].
-  set checkInterval(Duration duration) {
+  ///
+  /// Resets the [_timerHandle] in the process.
+  void setIntervalAndResetTimer(Duration duration) {
     _checkInterval = duration;
     _timerHandle?.cancel();
     _timerHandle = Timer(_checkInterval, _maybeEmitStatusUpdate);
