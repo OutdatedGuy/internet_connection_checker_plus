@@ -49,7 +49,8 @@ void main() {
           client.responseBuilder = (req) {
             for (final header in expectedHeaders.entries) {
               final key = header.key;
-              if (!req.headers.containsKey(key) || req.headers[key] != header.value) {
+              if (!req.headers.containsKey(key) ||
+                  req.headers[key] != header.value) {
                 return TestHttpClient.createResponse(statusCode: 500);
               }
             }
