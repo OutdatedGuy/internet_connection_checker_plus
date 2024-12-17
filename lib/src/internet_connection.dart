@@ -89,8 +89,8 @@ class InternetConnection {
     _statusController.onCancel = _handleStatusChangeCancel;
   }
 
-  /// The default check interval.
-  static const Duration _defaultCheckInterval = Duration(seconds: 10);
+  /// The default check interval duration.
+  static const _defaultCheckInterval = Duration(seconds: 10);
 
   /// The default list of [Uri]s used for checking internet reachability.
   final List<InternetCheckOption> _defaultCheckOptions = [
@@ -146,19 +146,16 @@ class InternetConnection {
     }
   }
 
-  /// Allows to change existing [_checkInterval].
-  ///
-  /// Resets the [_timerHandle] in the process.
+  /// Updates the interval between connection checks to the given [duration] and
+  /// resets the connection checking timer.
   void setIntervalAndResetTimer(Duration duration) {
     _checkInterval = duration;
     _timerHandle?.cancel();
     _timerHandle = Timer(_checkInterval, _maybeEmitStatusUpdate);
   }
 
-  /// Returns current [_checkInterval].
-  Duration get checkInterval {
-    return _checkInterval;
-  }
+  /// Returns the current duration between connection checks.
+  Duration get checkInterval => _checkInterval;
 
   /// Checks if there is internet access by verifying connectivity to the
   /// specified [Uri]s.
