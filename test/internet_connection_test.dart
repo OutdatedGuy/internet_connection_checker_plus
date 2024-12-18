@@ -1,6 +1,4 @@
 // Flutter Packages
-import 'dart:async';
-
 import 'package:flutter_test/flutter_test.dart';
 
 // This Package
@@ -88,8 +86,7 @@ void main() {
             return TestHttpClient.createResponse(statusCode: 200);
           };
 
-          final StreamSubscription<InternetStatus> sub =
-              InternetConnection.createInstance(
+          final sub = InternetConnection.createInstance(
             checkInterval: const Duration(milliseconds: 100),
             useDefaultOptions: false,
             customCheckOptions: [
@@ -117,7 +114,7 @@ void main() {
             return TestHttpClient.createResponse(statusCode: 200);
           };
 
-          final InternetConnection instance = InternetConnection.createInstance(
+          final instance = InternetConnection.createInstance(
             checkInterval: const Duration(milliseconds: 100),
             useDefaultOptions: false,
             customCheckOptions: [
@@ -127,8 +124,7 @@ void main() {
             ],
           );
 
-          final StreamSubscription<InternetStatus> sub =
-              instance.onStatusChange.listen((_) {});
+          final sub = instance.onStatusChange.listen((_) {});
 
           await Future.delayed(const Duration(milliseconds: 500));
 
@@ -154,7 +150,7 @@ void main() {
             return TestHttpClient.createResponse(statusCode: 200);
           };
 
-          final InternetConnection instance = InternetConnection.createInstance(
+          final instance = InternetConnection.createInstance(
             checkInterval: const Duration(milliseconds: 100),
             useDefaultOptions: false,
             customCheckOptions: [
@@ -164,8 +160,7 @@ void main() {
             ],
           );
 
-          final StreamSubscription<InternetStatus> sub =
-              instance.onStatusChange.listen((_) {
+          final sub = instance.onStatusChange.listen((_) {
             // Setting the same interval upon each emit should not
             // result in any extra triggers.
             instance.setIntervalAndResetTimer(instance.checkInterval);
