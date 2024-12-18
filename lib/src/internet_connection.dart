@@ -71,10 +71,11 @@ class InternetConnection {
   /// - If [useDefaultOptions] is `false`, you must provide a non-empty
   /// [customCheckOptions] list.
   InternetConnection.createInstance({
-    this.checkInterval = const Duration(seconds: 10),
+    Duration? checkInterval,
     List<InternetCheckOption>? customCheckOptions,
     bool useDefaultOptions = true,
-  }) : assert(
+  })  : _checkInterval = checkInterval ?? _defaultCheckInterval,
+        assert(
           useDefaultOptions || customCheckOptions?.isNotEmpty == true,
           'You must provide a list of options if you are not using the '
           'default ones.',
@@ -87,6 +88,9 @@ class InternetConnection {
     _statusController.onListen = _maybeEmitStatusUpdate;
     _statusController.onCancel = _handleStatusChangeCancel;
   }
+
+  /// The default check interval duration.
+  static const _defaultCheckInterval = Duration(seconds: 10);
 
   /// The default list of [Uri]s used for checking internet reachability.
   final List<InternetCheckOption> _defaultCheckOptions = [
@@ -109,8 +113,8 @@ class InternetConnection {
 
   /// The duration between consecutive status checks.
   ///
-  /// Defaults to 5 seconds.
-  final Duration checkInterval;
+  /// Defaults to [_defaultCheckInterval].
+  Duration _checkInterval;
 
   /// The last known internet connection status result.
   InternetStatus? _lastStatus;
@@ -141,6 +145,17 @@ class InternetConnection {
       );
     }
   }
+
+  /// Updates the interval between connection checks to the given [duration] and
+  /// resets the connection checking timer.
+  void setIntervalAndResetTimer(Duration duration) {
+    _checkInterval = duration;
+    _timerHandle?.cancel();
+    _timerHandle = Timer(_checkInterval, _maybeEmitStatusUpdate);
+  }
+
+  /// Returns the current duration between connection checks.
+  Duration get checkInterval => _checkInterval;
 
   /// Checks if there is internet access by verifying connectivity to the
   /// specified [Uri]s.
@@ -193,7 +208,7 @@ class InternetConnection {
       _statusController.add(currentStatus);
     }
 
-    _timerHandle = Timer(checkInterval, _maybeEmitStatusUpdate);
+    _timerHandle = Timer(_checkInterval, _maybeEmitStatusUpdate);
 
     _lastStatus = currentStatus;
   }
