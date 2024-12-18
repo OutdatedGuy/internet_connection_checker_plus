@@ -1,3 +1,8 @@
+## 2.6.0
+
+- feat: function to change check interval duration and reset timer in [6a4ef67](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/6a4ef67a3810e65759a6b32b14901150785ca488). Thanks [GenixPL](https://github.com/GenixPL) for [#63](https://github.com/OutdatedGuy/internet_connection_checker_plus/pull/63)
+- chore: updated example app to flutter v3.27 in [30c8b15](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/30c8b1553bcff2bb62ad6c62abebefb15a0d5cb4)
+
 ## 2.5.2
 
 - refactor: removed unnecessary `compute` function in [33e1a55](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/33e1a55743ac6924d31300913991ecc3b3ba85a3)
@@ -6,7 +11,7 @@
 
 ## 2.5.1
 
-- refactor: lowered sdk constraints to support dart 2.15 and above
+- refactor: lowered sdk constraints to support dart 2.15 and above in [c78ef26](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/c78ef2638bc9d18f284c0d307377a4b30102b253)
 
 ## 2.5.0
 

@@ -121,7 +121,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "2.5.2"
+    version: "2.6.0"
   lints:
     dependency: transitive
     description:
