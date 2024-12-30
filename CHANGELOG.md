@@ -1,3 +1,7 @@
+## 2.7.0
+
+- feat: flag `enableStrictCheck` to require all addresses to return success in [9edc61b](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/9edc61b2b3e6659b06328cf91efcc0218deef314)
+
 ## 2.6.0
 
 - feat: function to change check interval duration and reset timer in [6a4ef67](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/6a4ef67a3810e65759a6b32b14901150785ca488). Thanks [GenixPL](https://github.com/GenixPL) for [#63](https://github.com/OutdatedGuy/internet_connection_checker_plus/pull/63)
