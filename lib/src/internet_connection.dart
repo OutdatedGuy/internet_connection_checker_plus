@@ -74,6 +74,7 @@ class InternetConnection {
     Duration? checkInterval,
     List<InternetCheckOption>? customCheckOptions,
     bool useDefaultOptions = true,
+    this.enableStrictCheck = false,
   })  : _checkInterval = checkInterval ?? _defaultCheckInterval,
         assert(
           useDefaultOptions || customCheckOptions?.isNotEmpty == true,
@@ -115,6 +116,15 @@ class InternetConnection {
   ///
   /// Defaults to [_defaultCheckInterval].
   Duration _checkInterval;
+
+  /// If `true`, all checks must be successful to consider the internet as
+  /// connected.
+  ///
+  /// If `false`, only one successful check is required to consider the internet
+  /// as connected.
+  ///
+  /// Defaults to `false`.
+  final bool enableStrictCheck;
 
   /// The last known internet connection status result.
   InternetStatus? _lastStatus;
@@ -164,18 +174,28 @@ class InternetConnection {
   /// whether internet access is available or not.
   Future<bool> get hasInternetAccess async {
     final completer = Completer<bool>();
-    int length = _internetCheckOptions.length;
+    int remainingChecks = _internetCheckOptions.length;
+    int successCount = 0;
 
     for (final option in _internetCheckOptions) {
       unawaited(
         _checkReachabilityFor(option).then((result) {
-          length -= 1;
+          if (result.isSuccess) {
+            successCount += 1;
+          }
+
+          remainingChecks -= 1;
 
           if (completer.isCompleted) return;
 
-          if (result.isSuccess) {
+          if (!enableStrictCheck && result.isSuccess) {
+            // Return true immediately if not in strict mode and a success is found.
             completer.complete(true);
-          } else if (length == 0) {
+          } else if (enableStrictCheck && remainingChecks == 0) {
+            // In strict mode, complete only when all checks are done.
+            completer.complete(successCount == _internetCheckOptions.length);
+          } else if (!enableStrictCheck && remainingChecks == 0) {
+            // In non-strict mode, complete as false if no success is found.
             completer.complete(false);
           }
         }),

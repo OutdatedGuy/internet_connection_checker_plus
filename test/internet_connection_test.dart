@@ -72,6 +72,27 @@ void main() {
       });
     });
 
+    group('enableStrictCheck', () {
+      test('returns true when all URIs are reachable', () async {
+        final checker = InternetConnection.createInstance(
+          enableStrictCheck: true,
+        );
+        expect(await checker.hasInternetAccess, true);
+      });
+
+      test('returns false when any URI is unreachable', () async {
+        final checker = InternetConnection.createInstance(
+          enableStrictCheck: true,
+          customCheckOptions: [
+            InternetCheckOption(
+              uri: Uri.parse('https://www.example.com/nonexistent-page'),
+            ),
+          ],
+        );
+        expect(await checker.hasInternetAccess, false);
+      });
+    });
+
     group('checkInterval', () {
       setUp(() {
         TestWidgetsFlutterBinding.ensureInitialized();
