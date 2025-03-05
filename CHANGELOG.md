@@ -1,3 +1,8 @@
+## 2.7.1
+
+- Fixed Apple Privacy Manifest File Problem in [c1e65d2](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/c1e65d271bec0e42475f1786fee364ddefce8cb7). Thanks [SalihCanBinboga](https://github.com/SalihCanBinboga) for [#72](https://github.com/OutdatedGuy/internet_connection_checker_plus/pull/72)
+- chore: updated example app to flutter v3.29 in [db3c812](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/db3c81245b3db41c3074abfac2c7f9d8ecd43959)
+
 ## 2.7.0
 
 - feat: flag `enableStrictCheck` to require all addresses to return success in [9edc61b](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/9edc61b2b3e6659b06328cf91efcc0218deef314)
