@@ -47,9 +47,7 @@ class _CustomSuccessCriteriaState extends State<CustomSuccessCriteria> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Custom Success Criteria'),
-      ),
+      appBar: AppBar(title: const Text('Custom Success Criteria')),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -63,17 +61,14 @@ class _CustomSuccessCriteriaState extends State<CustomSuccessCriteria> {
                 'status code should be 404.',
                 textAlign: TextAlign.center,
               ),
-              const Divider(
-                height: 48.0,
-                thickness: 2.0,
-              ),
+              const Divider(height: 48.0, thickness: 2.0),
               const Text('Connection Status:'),
               _connectionStatus == null
                   ? const CircularProgressIndicator.adaptive()
                   : Text(
-                      _connectionStatus.toString(),
-                      style: Theme.of(context).textTheme.headlineSmall,
-                    ),
+                    _connectionStatus.toString(),
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
             ],
           ),
         ),

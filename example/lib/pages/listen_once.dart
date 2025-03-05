@@ -27,9 +27,7 @@ class _ListenOnceState extends State<ListenOnce> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Listen Once'),
-      ),
+      appBar: AppBar(title: const Text('Listen Once')),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -44,17 +42,14 @@ class _ListenOnceState extends State<ListenOnce> {
                 'reflected in this example.',
                 textAlign: TextAlign.center,
               ),
-              const Divider(
-                height: 48.0,
-                thickness: 2.0,
-              ),
+              const Divider(height: 48.0, thickness: 2.0),
               const Text('Connection Status:'),
               _connectionStatus == null
                   ? const CircularProgressIndicator.adaptive()
                   : Text(
-                      _connectionStatus.toString(),
-                      style: Theme.of(context).textTheme.headlineSmall,
-                    ),
+                    _connectionStatus.toString(),
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
             ],
           ),
         ),
