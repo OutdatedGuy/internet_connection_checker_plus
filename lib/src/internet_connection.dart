@@ -270,6 +270,7 @@ class InternetConnection {
           _maybeEmitStatusUpdate();
         }
       },
+      onError: (_, __) {},
     );
   }
 }
