@@ -100,7 +100,9 @@ class InternetConnection {
     InternetCheckOption(
       uri: Uri.parse('https://jsonplaceholder.typicode.com/todos/1'),
     ),
-    InternetCheckOption(uri: Uri.parse('https://reqres.in/api/users/1')),
+    InternetCheckOption(
+      uri: Uri.parse('https://pokeapi.co/api/v2/ability/?limit=1'),
+    ),
   ];
 
   /// The list of [Uri]s used for checking internet reachability.
