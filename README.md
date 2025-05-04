@@ -207,7 +207,7 @@ The `InternetConnection` class uses the following `Uri`s by default:
 | `https://one.one.one.one`                      | Response time is less than `100ms`, CORS enabled, no-cache |
 | `https://icanhazip.com`                        | Response time is less than `100ms`, CORS enabled, no-cache |
 | `https://jsonplaceholder.typicode.com/todos/1` | Response time is less than `100ms`, CORS enabled, no-cache |
-| `https://reqres.in/api/users/1`                | Response time is less than `100ms`, CORS enabled, no-cache |
+| `https://pokeapi.co/api/v2/ability/?limit=1`   | Response time is less than `100ms`, CORS enabled, no-cache |
 
 #### Some Tested URIs
 
