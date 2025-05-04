@@ -23,14 +23,10 @@ network requests.
 
 ## Supported Platforms
 
-| Platform | Check Connectivity | Listen for Changes |
-| :------: | :----------------: | :----------------: |
-| Android  |         ✅         |         ✅         |
-|   iOS    |         ✅         |         ✅         |
-|  macOS   |         ✅         |         ✅         |
-|  Linux   |         ✅         |         ✅         |
-| Windows  |         ✅         |         ✅         |
-|   Web    |         ✅         |         ✅         |
+|      Features      | Android | iOS | macOS | Linux | Windows | Web |
+| :----------------: | :-----: | :-: | :---: | :---: | :-----: | :-: |
+| Check Connectivity |   ✅    | ✅  |  ✅   |  ✅   |   ✅    | ✅  |
+| Listen for Changes |   ✅    | ✅  |  ✅   |  ✅   |   ✅    | ✅  |
 
 ## Permissions
 
@@ -198,7 +194,9 @@ class _MyWidgetState extends State<MyWidget> {
 }
 ```
 
-#### Default `Uri`s
+## Built-in and Additional URIs
+
+### Default `Uri`s
 
 The `InternetConnection` class uses the following `Uri`s by default:
 
@@ -209,7 +207,9 @@ The `InternetConnection` class uses the following `Uri`s by default:
 | `https://jsonplaceholder.typicode.com/todos/1` | Response time is less than `100ms`, CORS enabled, no-cache |
 | `https://pokeapi.co/api/v2/ability/?limit=1`   | Response time is less than `100ms`, CORS enabled, no-cache |
 
-#### Some Tested URIs
+### Some Tested URIs
+
+The following `Uri`s are tested and work well with the package:
 
 | URI                                                 | Description                              |
 | :-------------------------------------------------- | :--------------------------------------- |
@@ -221,7 +221,7 @@ The `InternetConnection` class uses the following `Uri`s by default:
 | `https://lenta.ru`                                  | Russia supported, CORS enabled, no-cache |
 | `https://www.gazeta.ru`                             | Russia supported, CORS enabled, no-cache |
 
-### If you liked the package, then please give it a [Like 👍🏼][package] and [Star ⭐][repository]
+## If you liked the package, then please give it a [Like 👍🏼][package] and [Star ⭐][repository]
 
 ## Credits
 
