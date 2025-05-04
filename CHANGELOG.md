@@ -1,3 +1,9 @@
+## 2.7.2
+
+- fix: some URIs consistently failing in [df4461c](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/df4461ce7fa16f014fb5a998578dfd263197baeb)
+- fix: type cast error when network changes in [3d6b56e](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/3d6b56e9b80a0e471138e9b50316fcf4228da6d2)
+- docs: updated tested uris in [04f63cf](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/04f63cfa58a976fab901f81ccb56543790eaec01)
+
 ## 2.7.1
 
 - Fixed Apple Privacy Manifest File Problem in [c1e65d2](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/c1e65d271bec0e42475f1786fee364ddefce8cb7). Thanks [SalihCanBinboga](https://github.com/SalihCanBinboga) for [#72](https://github.com/OutdatedGuy/internet_connection_checker_plus/pull/72)
