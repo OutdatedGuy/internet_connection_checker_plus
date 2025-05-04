@@ -34,7 +34,10 @@ class _CustomURIsState extends State<CustomURIs> {
           uri: Uri.parse('https://api.thecatapi.com/v1/images/search'),
         ),
         InternetCheckOption(
-          uri: Uri.parse('https://api.coindesk.com/v1/bpi/currentprice.json'),
+          uri: Uri.parse('https://randomuser.me/api/?inc=gender'),
+        ),
+        InternetCheckOption(
+          uri: Uri.parse('https://dog.ceo/api/breed/husky/list'),
         ),
         InternetCheckOption(uri: Uri.parse('https://lenta.ru')),
         InternetCheckOption(uri: Uri.parse('https://www.gazeta.ru')),
