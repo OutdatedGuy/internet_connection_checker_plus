@@ -194,6 +194,31 @@ class _MyWidgetState extends State<MyWidget> {
 }
 ```
 
+### 8. Using `enableStrictCheck`
+
+The `enableStrictCheck` option can be used to require that **all** checked URIs
+must respond successfully for the internet to be considered available. By
+default, only one successful response is required.
+
+```dart
+final connection = InternetConnection.createInstance(
+  enableStrictCheck: true,
+  customCheckOptions: [
+    InternetCheckOption(uri: Uri.parse('https://example.com')),
+    InternetCheckOption(uri: Uri.parse('https://example2.com')),
+  ],
+);
+```
+
+> [!CAUTION]
+>
+> **Use `enableStrictCheck` only with custom-defined URIs, not with the default
+> ones.**
+>
+> Using it with the default URIs may lead to unreliable results or service
+> outages, as all default endpoints must be up and reachable for a positive
+> result.
+
 ## Built-in and Additional URIs
 
 ### Default `Uri`s
