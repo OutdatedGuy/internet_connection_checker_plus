@@ -244,27 +244,27 @@ final connection = InternetConnection.createInstance(
 
 The following endpoints are checked by default:
 
-| URI                                            | Description                                                |
-| :--------------------------------------------- | :--------------------------------------------------------- |
-| `https://one.one.one.one`                      | Response time is less than `100ms`, CORS enabled, no-cache |
-| `https://icanhazip.com`                        | Response time is less than `100ms`, CORS enabled, no-cache |
-| `https://jsonplaceholder.typicode.com/todos/1` | Response time is less than `100ms`, CORS enabled, no-cache |
-| `https://pokeapi.co/api/v2/ability/?limit=1`   | Response time is less than `100ms`, CORS enabled, no-cache |
+| URI                                          | Description                                                |
+| :------------------------------------------- | :--------------------------------------------------------- |
+| https://one.one.one.one                      | Response time is less than `100ms`, CORS enabled, no-cache |
+| https://icanhazip.com                        | Response time is less than `100ms`, CORS enabled, no-cache |
+| https://jsonplaceholder.typicode.com/todos/1 | Response time is less than `100ms`, CORS enabled, no-cache |
+| https://pokeapi.co/api/v2/ability/?limit=1   | Response time is less than `100ms`, CORS enabled, no-cache |
 
 ### More Tested URIs
 
 The following URIs are tested and work well with the package:
 
-| URI                                          | Description                              |
-| :------------------------------------------- | :--------------------------------------- |
-| `https://ipapi.co/ip`                        | CORS enabled, no-cache                   |
-| `https://api.adviceslip.com/advice`          | CORS enabled, no-cache                   |
-| `https://api.bitbucket.org/2.0/repositories` | CORS enabled, no-cache                   |
-| `https://api.thecatapi.com/v1/images/search` | CORS enabled, no-cache                   |
-| `https://randomuser.me/api/?inc=gender`      | CORS enabled, no-cache                   |
-| `https://dog.ceo/api/breed/husky/list`       | CORS enabled, no-cache                   |
-| `https://lenta.ru`                           | Russia supported, CORS enabled, no-cache |
-| `https://www.gazeta.ru`                      | Russia supported, CORS enabled, no-cache |
+| URI                                        | Description                              |
+| :----------------------------------------- | :--------------------------------------- |
+| https://ipapi.co/ip                        | CORS enabled, no-cache                   |
+| https://api.adviceslip.com/advice          | CORS enabled, no-cache                   |
+| https://api.bitbucket.org/2.0/repositories | CORS enabled, no-cache                   |
+| https://api.thecatapi.com/v1/images/search | CORS enabled, no-cache                   |
+| https://randomuser.me/api/?inc=gender      | CORS enabled, no-cache                   |
+| https://dog.ceo/api/breed/husky/list       | CORS enabled, no-cache                   |
+| https://lenta.ru                           | Russia supported, CORS enabled, no-cache |
+| https://www.gazeta.ru                      | Russia supported, CORS enabled, no-cache |
 
 ## If you liked the package, then please give it a [Like 👍🏼][package] and [Star ⭐][repository]
 
