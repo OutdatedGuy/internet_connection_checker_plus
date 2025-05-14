@@ -149,7 +149,44 @@ final connection = InternetConnection.createInstance(
 );
 ```
 
-### 7. Pause and Resume on App Lifecycle Changes
+### 7. Using a custom connectivity check method
+
+For advanced use cases, you can completely customize how connectivity checks are performed by providing your own connectivity checker:
+
+```dart
+final connection = InternetConnection.createInstance(
+  customConnectivityCheck: (option) async {
+    // Example: Use a different HTTP method or client
+    try {
+      final client = http.Client();
+      try {
+        final response = await client.get(
+          option.uri,
+          headers: option.headers,
+        ).timeout(option.timeout);
+        
+        return InternetCheckResult(
+          option: option,
+          isSuccess: response.statusCode == 200,
+        );
+      } finally {
+        client.close();
+      }
+    } catch (_) {
+      return InternetCheckResult(option: option, isSuccess: false);
+    }
+  },
+);
+```
+
+This customization gives you full control over the connectivity detection process, allowing you to:
+- Implement platform-specific network detection
+- Use alternate connectivity checking strategies
+- Implement custom fallback mechanisms
+- Add detailed logging or metrics for connectivity checks
+- Integrate with other network monitoring tools
+
+### 8. Pause and Resume on App Lifecycle Changes
 
 For situation where you want to pause any network requests when the app goes
 into the background and resume them when the app comes back into the foreground
