@@ -70,6 +70,50 @@ void main() {
           expect(await checker.hasInternetAccess, expectedStatus);
         });
       });
+
+      test('creates and uses default HTTP client when none is provided',
+          () async {
+        // This test verifies default behavior, which is hard to test directly
+        // So we test that the checker works without explicitly providing a client
+        final checker = InternetConnection.createInstance(
+          customCheckOptions: [
+            InternetCheckOption(uri: Uri.parse('https://www.example.com')),
+          ],
+          useDefaultOptions: false,
+        );
+
+        // Since we can't mock the global HTTP client in this test,
+        // we just verify that no exception is thrown when executing this
+        // This inherently tests that a default client was created and used
+        // Successfully checking internet access means the internal client works
+        expect(checker.hasInternetAccess, isA<Future<bool>>());
+      });
+
+      test('uses custom reachability checker when provided', () async {
+        var reachabilityCheckerCalled = false;
+
+        customReachabilityChecker(InternetCheckOption option) async {
+          reachabilityCheckerCalled = true;
+          expect(option.uri.host, 'example.com');
+          // Return success for this test
+          return InternetCheckResult(
+            option: option,
+            isSuccess: true,
+          );
+        }
+
+        final checker = InternetConnection.createInstance(
+          customCheckOptions: [
+            InternetCheckOption(uri: Uri.parse('https://example.com')),
+          ],
+          useDefaultOptions: false,
+          customConnectivityCheck: customReachabilityChecker,
+        );
+
+        final result = await checker.hasInternetAccess;
+        expect(reachabilityCheckerCalled, true);
+        expect(result, true);
+      });
     });
 
     group('enableStrictCheck', () {

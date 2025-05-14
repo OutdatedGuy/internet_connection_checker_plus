@@ -1,5 +1,11 @@
 part of '../internet_connection_checker_plus.dart';
 
+/// A callback function for checking if a specific internet endpoint is reachable.
+///
+/// Takes a single [InternetCheckOption] and returns a [Future<InternetCheckResult>].
+/// This allows for complete customization of how connectivity is checked for each endpoint.
+typedef ConnectivityCheckCallback = Future<InternetCheckResult> Function(InternetCheckOption option);
+
 /// A utility class for checking internet connectivity status.
 ///
 /// This class provides functionality to monitor and verify internet
@@ -70,12 +76,18 @@ class InternetConnection {
   ///
   /// - If [useDefaultOptions] is `false`, you must provide a non-empty
   /// [customCheckOptions] list.
+  ///
+  /// The [customConnectivityCheck] allows you to provide a custom method for checking
+  /// endpoint reachability. If provided, it will be used for all connectivity checks
+  /// instead of the default HTTP HEAD request implementation.
   InternetConnection.createInstance({
     Duration? checkInterval,
     List<InternetCheckOption>? customCheckOptions,
     bool useDefaultOptions = true,
     this.enableStrictCheck = false,
+    ConnectivityCheckCallback? customConnectivityCheck,
   })  : _checkInterval = checkInterval ?? _defaultCheckInterval,
+        _reachabilityChecker = customConnectivityCheck,
         assert(
           useDefaultOptions || customCheckOptions?.isNotEmpty == true,
           'You must provide a list of options if you are not using the '
@@ -128,6 +140,11 @@ class InternetConnection {
   /// Defaults to `false`.
   final bool enableStrictCheck;
 
+  /// Function to check reachability of a single network endpoint.
+  ///
+  /// This can be customized to allow for different ways of checking connectivity.
+  final ConnectivityCheckCallback? _reachabilityChecker;
+
   /// The last known internet connection status result.
   InternetStatus? _lastStatus;
 
@@ -141,6 +158,9 @@ class InternetConnection {
   Future<InternetCheckResult> _checkReachabilityFor(
     InternetCheckOption option,
   ) async {
+    if (_reachabilityChecker != null) {
+      return _reachabilityChecker!.call(option);
+    }
     try {
       final response = await http
           .head(option.uri, headers: option.headers)
