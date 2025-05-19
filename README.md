@@ -156,22 +156,18 @@ For advanced use cases, you can completely customize how connectivity checks are
 ```dart
 final connection = InternetConnection.createInstance(
   customConnectivityCheck: (option) async {
-    // Example: Use a different HTTP method or client
+    // Example: Use the Dio http client
     try {
-      final client = http.Client();
-      try {
-        final response = await client.get(
-          option.uri,
-          headers: option.headers,
-        ).timeout(option.timeout);
-        
-        return InternetCheckResult(
-          option: option,
-          isSuccess: response.statusCode == 200,
-        );
-      } finally {
-        client.close();
-      }
+      final dio = Dio();
+      final response = await dio.head(
+        option.uri,
+        options: Options(headers: option.headers, receiveTimeout: option.timeout, validateStatus: (_) => true),
+      );
+
+      return InternetCheckResult(
+        option: option,
+        isSuccess: response.statusCode == 200,
+      );
     } catch (_) {
       return InternetCheckResult(option: option, isSuccess: false);
     }

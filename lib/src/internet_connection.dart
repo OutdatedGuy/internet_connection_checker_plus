@@ -85,9 +85,8 @@ class InternetConnection {
     List<InternetCheckOption>? customCheckOptions,
     bool useDefaultOptions = true,
     this.enableStrictCheck = false,
-    ConnectivityCheckCallback? customConnectivityCheck,
+    this.customConnectivityCheck,
   })  : _checkInterval = checkInterval ?? _defaultCheckInterval,
-        _reachabilityChecker = customConnectivityCheck,
         assert(
           useDefaultOptions || customCheckOptions?.isNotEmpty == true,
           'You must provide a list of options if you are not using the '
@@ -143,7 +142,7 @@ class InternetConnection {
   /// Function to check reachability of a single network endpoint.
   ///
   /// This can be customized to allow for different ways of checking connectivity.
-  final ConnectivityCheckCallback? _reachabilityChecker;
+  final ConnectivityCheckCallback? customConnectivityCheck;
 
   /// The last known internet connection status result.
   InternetStatus? _lastStatus;
@@ -158,10 +157,10 @@ class InternetConnection {
   Future<InternetCheckResult> _checkReachabilityFor(
     InternetCheckOption option,
   ) async {
-    if (_reachabilityChecker != null) {
-      return _reachabilityChecker!.call(option);
-    }
     try {
+      if (customConnectivityCheck != null) {
+        return customConnectivityCheck!.call(option);
+      }
       final response = await http
           .head(option.uri, headers: option.headers)
           .timeout(option.timeout);
