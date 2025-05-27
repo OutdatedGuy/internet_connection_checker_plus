@@ -64,6 +64,7 @@ import 'dart:async';
 
 // Third Party Packages
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 // Package Files
