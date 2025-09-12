@@ -126,6 +126,10 @@ class InternetConnection {
   /// as connected.
   ///
   /// Defaults to `false`.
+  ///
+  /// **Important:** Use this feature only with custom-defined Uris, not with
+  /// the default ones, to avoid potential issues with reliability or service
+  /// outages.
   final bool enableStrictCheck;
 
   /// The last known internet connection status result.
