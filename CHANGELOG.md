@@ -1,3 +1,8 @@
+## 2.8.0
+
+- feat: updated [connectivity_plus](https://pub.dev/packages/connectivity_plus) dependency to v7.0.0 in [d8cf04d](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/d8cf04dec0a549c06f076542bbb0c994a20b249e)
+- docs: added information about `enableStrictCheck` usage in [6fb7ed6](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/6fb7ed6a133e39af249c7324d3f5bedfe1b0cc38)
+
 ## 2.7.2
 
 - fix: some URIs consistently failing in [df4461c](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/df4461ce7fa16f014fb5a998578dfd263197baeb)
