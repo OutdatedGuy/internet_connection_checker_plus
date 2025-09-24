@@ -56,6 +56,7 @@ class InternetCheckOption {
     required this.uri,
     this.timeout = const Duration(seconds: 3),
     this.headers = const {},
+    this.debugSafeTimeoutHandling = false,
     ResponseStatusFn? responseStatusFn,
   }) : responseStatusFn = responseStatusFn ?? defaultResponseStatusFn;
 
@@ -112,12 +113,26 @@ class InternetCheckOption {
   /// ```
   final ResponseStatusFn responseStatusFn;
 
+  /// Enables debug-aware timeout handling logic.
+  ///
+  /// When set to `true`, and the app is running in `kDebugMode`,
+  /// a `TimeoutException` will be **ignored** if the elapsed time
+  /// exceeds the configured timeout — which may indicate the app
+  /// was paused in the debugger during the request.
+  ///
+  /// This helps prevent false-negative results during development,
+  /// where debugger pauses can cause artificial timeouts.
+  ///
+  /// *Default: `false`*
+  final bool debugSafeTimeoutHandling;
+
   @override
   String toString() {
     return 'InternetCheckOption(\n'
         '  uri: $uri,\n'
         '  timeout: $timeout,\n'
-        '  headers: ${headers.toString()}\n'
+        '  headers: ${headers.toString()},\n'
+        '  debugSafeTimeoutHandling: $debugSafeTimeoutHandling\n'
         ')';
   }
 }

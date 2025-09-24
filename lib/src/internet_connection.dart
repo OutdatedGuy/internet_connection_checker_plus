@@ -169,6 +169,7 @@ class InternetConnection {
   Future<InternetCheckResult> _checkReachabilityFor(
     InternetCheckOption option,
   ) async {
+    final sw = Stopwatch()..start();
     try {
       if (customConnectivityCheck != null) {
         return customConnectivityCheck!.call(option);
@@ -182,11 +183,22 @@ class InternetConnection {
         option: option,
         isSuccess: option.responseStatusFn(response),
       );
-    } catch (_) {
+    } catch (e) {
+      var isSuccess = false;
+      if (kDebugMode &&
+          option.debugSafeTimeoutHandling &&
+          e is TimeoutException) {
+        final margin = Duration(milliseconds: 100);
+        // Treat timeout as success if elapsed > timeout + margin (accounts for function overhead)
+        isSuccess = sw.elapsed > option.timeout + margin;
+      }
+
       return InternetCheckResult(
         option: option,
-        isSuccess: false,
+        isSuccess: isSuccess,
       );
+    } finally {
+      sw.stop();
     }
   }
 
