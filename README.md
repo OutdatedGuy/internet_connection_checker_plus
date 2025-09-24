@@ -176,6 +176,7 @@ final connection = InternetConnection.createInstance(
 ```
 
 This customization gives you full control over the connectivity detection process, allowing you to:
+
 - Implement platform-specific network detection
 - Use alternate connectivity checking strategies
 - Implement custom fallback mechanisms
