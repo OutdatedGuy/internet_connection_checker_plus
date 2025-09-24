@@ -3,8 +3,7 @@
 A Flutter package to check your internet connection with subsecond response
 times, even on mobile networks!
 
-[![pub package][package_svg]][package]
-[![GitHub][license_svg]](LICENSE)
+[![pub package][package_svg]][package] [![GitHub][license_svg]](LICENSE)
 
 [![GitHub issues][issues_svg]][issues]
 [![GitHub issues closed][issues_closed_svg]][issues_closed]
@@ -12,27 +11,29 @@ times, even on mobile networks!
 <hr />
 
 This library provides functionality to monitor and verify internet connectivity
-by checking reachability to various `Uri`s. It relies on the `connectivity_plus`
+by checking reachability to various URIs. It relies on the `connectivity_plus`
 package for listening to connectivity changes and the `http` package for making
 network requests.
 
 ## Features
 
-- Check internet connectivity status
-- Listen for internet connectivity changes
+- ✅ Check internet connectivity status
+- ✅ Listen to internet connectivity changes
+- ✅ Customizable endpoints and success criteria
+- ✅ Customizable connectivity check logic
 
 ## Supported Platforms
 
 |      Features      | Android | iOS | macOS | Linux | Windows | Web |
 | :----------------: | :-----: | :-: | :---: | :---: | :-----: | :-: |
 | Check Connectivity |   ✅    | ✅  |  ✅   |  ✅   |   ✅    | ✅  |
-| Listen for Changes |   ✅    | ✅  |  ✅   |  ✅   |   ✅    | ✅  |
+| Listen to Changes  |   ✅    | ✅  |  ✅   |  ✅   |   ✅    | ✅  |
 
 ## Permissions
 
 ### Android
 
-Add the following permissions to your `AndroidManifest.xml` file:
+Add the following permission to your `AndroidManifest.xml`:
 
 ```xml
 <uses-permission android:name="android.permission.INTERNET" />
@@ -40,9 +41,9 @@ Add the following permissions to your `AndroidManifest.xml` file:
 
 ### macOS
 
-Add the following permissions to your macOS `.entitlements` files:
+Add the following to your macOS `.entitlements` files:
 
-```entitlements
+```xml
 <key>com.apple.security.network.client</key>
 <true/>
 ```
@@ -51,61 +52,52 @@ For more information, see the [Flutter Networking Documentation].
 
 ## Usage
 
-### 1. Add dependency
+### Checking for internet connectivity (one-time)
 
-Add the `internet_connection_checker_plus` package to your `pubspec.yaml` file:
-
-```yaml
-dependencies:
-  internet_connection_checker_plus: ^2.8.0
-```
-
-### 2. Import the package
-
-Import the `internet_connection_checker_plus` package into your Dart file:
+The simplest way to check if you have internet access:
 
 ```dart
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+final bool isConnected = await InternetConnection().hasInternetAccess;
+if (isConnected) {
+  print('Connected!');
+} else {
+  print('No internet connection.');
+}
 ```
 
-### 3. Checking for internet connectivity
+### Listening to internet connectivity changes
 
-The simplest way to check for internet connectivity is to use the
-`InternetConnection` class:
+The `InternetConnection` class exposes a stream of `InternetStatus` updates,
+allowing you to react to changes in connectivity:
 
 ```dart
-bool result = await InternetConnection().hasInternetAccess;
+final subscription = InternetConnection().onStatusChange.listen(
+  (InternetStatus status) {
+    if (status == InternetStatus.connected) {
+      // Internet is connected
+    } else {
+      // Internet is disconnected
+    }
+  },
+);
 ```
 
-### 4. Listening for internet connectivity changes
+> [!NOTE]
+>
+> Don't forget to cancel the subscription when it is no longer needed. This will
+> prevent memory leaks and free up resources:
+>
+> ```dart
+> @override
+> void dispose() {
+>   subscription.cancel();
+>   super.dispose();
+> }
+> ```
 
-The `InternetConnection` class also provides a stream of `InternetStatus` that
-can be used to listen for changes in internet connectivity:
+### Using custom endpoints (URIs)
 
-```dart
-final listener = InternetConnection().onStatusChange.listen((InternetStatus status) {
-  switch (status) {
-    case InternetStatus.connected:
-      // The internet is now connected
-      break;
-    case InternetStatus.disconnected:
-      // The internet is now disconnected
-      break;
-  }
-});
-```
-
-Don't forget to cancel the subscription when it is no longer needed.
-This will prevent memory leaks and free up resources:
-
-```dart
-listener.cancel();
-```
-
-### 5. Add custom `Uri`s to check
-
-The `InternetConnection` class can be configured to check custom `Uri`s for
-internet connectivity:
+You can specify your own endpoints to check for connectivity:
 
 ```dart
 final connection = InternetConnection.createInstance(
@@ -113,22 +105,17 @@ final connection = InternetConnection.createInstance(
     InternetCheckOption(uri: Uri.parse('https://example.com')),
   ],
 );
+final isConnected = await connection.hasInternetAccess;
 ```
 
 > [!IMPORTANT]
 >
-> Make sure the custom `Uri`s have no caching enabled. Otherwise, the results
-> may be inaccurate.
+> - Make sure the endpoints have no caching enabled.
+> - On `web` platform, make sure the endpoints are not CORS blocked.
 
-> [!IMPORTANT]
->
-> On `web` platform, make sure the custom `Uri`s are not CORS blocked.
-> Otherwise, the results may be inaccurate.
+### Using custom success criteria
 
-### 6. Add custom success criteria
-
-The `InternetConnection` class can be configured to check custom `Uri`s for
-internet connectivity using custom success criteria:
+You can define what counts as a successful response:
 
 ```dart
 final connection = InternetConnection.createInstance(
@@ -141,15 +128,14 @@ final connection = InternetConnection.createInstance(
     ),
     InternetCheckOption(
       uri: Uri.parse('https://example2.com'),
-      responseStatusFn: (response) {
-        return response.statusCode >= 420 && response.statusCode < 1412;
-      },
+      responseStatusFn: (response) => response.statusCode == 420,
     ),
   ],
 );
+final isConnected = await connection.hasInternetAccess;
 ```
 
-### 7. Using a custom connectivity check method
+### Using a custom connectivity check method
 
 For advanced use cases, you can completely customize how connectivity checks are performed by providing your own connectivity checker:
 
@@ -183,7 +169,7 @@ This customization gives you full control over the connectivity detection proces
 - Add detailed logging or metrics for connectivity checks
 - Integrate with other network monitoring tools
 
-### 8. Pause and Resume on App Lifecycle Changes
+### Pause and Resume on App Lifecycle Changes
 
 For situation where you want to pause any network requests when the app goes
 into the background and resume them when the app comes back into the foreground
@@ -255,42 +241,42 @@ final connection = InternetConnection.createInstance(
 
 ## Built-in and Additional URIs
 
-### Default `Uri`s
+### Default URIs
 
-The `InternetConnection` class uses the following `Uri`s by default:
+The following endpoints are checked by default:
 
-| URI                                            | Description                                                |
-| :--------------------------------------------- | :--------------------------------------------------------- |
-| `https://one.one.one.one`                      | Response time is less than `100ms`, CORS enabled, no-cache |
-| `https://icanhazip.com`                        | Response time is less than `100ms`, CORS enabled, no-cache |
-| `https://jsonplaceholder.typicode.com/todos/1` | Response time is less than `100ms`, CORS enabled, no-cache |
-| `https://pokeapi.co/api/v2/ability/?limit=1`   | Response time is less than `100ms`, CORS enabled, no-cache |
+| URI                                          | Description                                                |
+| :------------------------------------------- | :--------------------------------------------------------- |
+| https://one.one.one.one                      | Response time is less than `100ms`, CORS enabled, no-cache |
+| https://icanhazip.com                        | Response time is less than `100ms`, CORS enabled, no-cache |
+| https://jsonplaceholder.typicode.com/todos/1 | Response time is less than `100ms`, CORS enabled, no-cache |
+| https://pokeapi.co/api/v2/ability/?limit=1   | Response time is less than `100ms`, CORS enabled, no-cache |
 
-### Some Tested URIs
+### More Tested URIs
 
-The following `Uri`s are tested and work well with the package:
+The following URIs are tested and work well with the package:
 
-| URI                                          | Description                              |
-| :------------------------------------------- | :--------------------------------------- |
-| `https://ipapi.co/ip`                        | CORS enabled, no-cache                   |
-| `https://api.adviceslip.com/advice`          | CORS enabled, no-cache                   |
-| `https://api.bitbucket.org/2.0/repositories` | CORS enabled, no-cache                   |
-| `https://api.thecatapi.com/v1/images/search` | CORS enabled, no-cache                   |
-| `https://randomuser.me/api/?inc=gender`      | CORS enabled, no-cache                   |
-| `https://dog.ceo/api/breed/husky/list`       | CORS enabled, no-cache                   |
-| `https://lenta.ru`                           | Russia supported, CORS enabled, no-cache |
-| `https://www.gazeta.ru`                      | Russia supported, CORS enabled, no-cache |
+| URI                                        | Description                              |
+| :----------------------------------------- | :--------------------------------------- |
+| https://ipapi.co/ip                        | CORS enabled, no-cache                   |
+| https://api.adviceslip.com/advice          | CORS enabled, no-cache                   |
+| https://api.bitbucket.org/2.0/repositories | CORS enabled, no-cache                   |
+| https://api.thecatapi.com/v1/images/search | CORS enabled, no-cache                   |
+| https://randomuser.me/api/?inc=gender      | CORS enabled, no-cache                   |
+| https://dog.ceo/api/breed/husky/list       | CORS enabled, no-cache                   |
+| https://lenta.ru                           | Russia supported, CORS enabled, no-cache |
+| https://www.gazeta.ru                      | Russia supported, CORS enabled, no-cache |
 
 ## If you liked the package, then please give it a [Like 👍🏼][package] and [Star ⭐][repository]
 
 ## Credits
 
 This package is a cloned and modified version of the
-[internet_connection_checker] package which is a cloned and modified version of
-the [data_connection_checker] package which is no longer maintained.
+[internet_connection_checker] package, which itself was based on
+[data_connection_checker] (now unmaintained).
 
-The aim of this package is to support the `web` platform which is currently not
-supported by the [internet_connection_checker] package.
+The main goal of this package is to provide a more reliable and faster solution
+for checking internet connectivity in Flutter applications.
 
 <!-- Badges URLs -->
 
