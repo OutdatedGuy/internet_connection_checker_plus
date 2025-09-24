@@ -20,6 +20,7 @@ network requests.
 - ✅ Check internet connectivity status
 - ✅ Listen to internet connectivity changes
 - ✅ Customizable endpoints and success criteria
+- ✅ Customizable connectivity check logic
 
 ## Supported Platforms
 
