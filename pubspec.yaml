@@ -1,6 +1,6 @@
 name: internet_connection_checker_plus
 description: "A Flutter package to check your internet connection with subsecond response times, even on mobile networks!"
-version: 2.8.0
+version: 2.9.0
 homepage: https://outdatedguy.rocks
 repository: https://github.com/OutdatedGuy/internet_connection_checker_plus
 topics:
