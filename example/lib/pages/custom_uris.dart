@@ -76,9 +76,9 @@ class _CustomURIsState extends State<CustomURIs> {
               _connectionStatus == null
                   ? const CircularProgressIndicator.adaptive()
                   : Text(
-                    _connectionStatus.toString(),
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  ),
+                      _connectionStatus.toString(),
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
             ],
           ),
         ),

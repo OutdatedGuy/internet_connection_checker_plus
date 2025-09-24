@@ -66,9 +66,9 @@ class _CustomSuccessCriteriaState extends State<CustomSuccessCriteria> {
               _connectionStatus == null
                   ? const CircularProgressIndicator.adaptive()
                   : Text(
-                    _connectionStatus.toString(),
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  ),
+                      _connectionStatus.toString(),
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
             ],
           ),
         ),

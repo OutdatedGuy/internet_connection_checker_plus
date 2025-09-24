@@ -22,6 +22,14 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        colorScheme: ColorScheme.fromSeed(
+          brightness: Brightness.dark,
+          seedColor: Colors.deepPurple,
+        ),
+        useMaterial3: true,
+      ),
       home: MyHomePage(),
     );
   }
@@ -47,20 +55,19 @@ class MyHomePage extends StatelessWidget {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children:
-              pages.entries.map((entry) {
-                return Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => entry.value),
-                      );
-                    },
-                    child: Text(entry.key),
-                  ),
-                );
-              }).toList(),
+          children: pages.entries.map((entry) {
+            return Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => entry.value),
+                  );
+                },
+                child: Text(entry.key),
+              ),
+            );
+          }).toList(),
         ),
       ),
     );
