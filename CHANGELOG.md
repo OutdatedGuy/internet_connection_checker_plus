@@ -1,3 +1,9 @@
+## 2.9.0
+
+- feat: ability to provide a custom connectivity check function in [e04ab72](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/e04ab72)
+- chore: updated example app to flutter v3.35 in [d451fea](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/d451fea)
+- docs: improved over-all documentation in [205cd9a](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/205cd9a)
+
 ## 2.8.0
 
 - feat: updated [connectivity_plus](https://pub.dev/packages/connectivity_plus) dependency to v7.0.0 in [d8cf04d](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/d8cf04d)
