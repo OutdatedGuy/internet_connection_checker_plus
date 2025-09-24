@@ -47,9 +47,9 @@ class _ListenOnceState extends State<ListenOnce> {
               _connectionStatus == null
                   ? const CircularProgressIndicator.adaptive()
                   : Text(
-                    _connectionStatus.toString(),
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  ),
+                      _connectionStatus.toString(),
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
             ],
           ),
         ),

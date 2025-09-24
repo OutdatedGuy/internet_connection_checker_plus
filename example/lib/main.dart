@@ -47,20 +47,19 @@ class MyHomePage extends StatelessWidget {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children:
-              pages.entries.map((entry) {
-                return Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => entry.value),
-                      );
-                    },
-                    child: Text(entry.key),
-                  ),
-                );
-              }).toList(),
+          children: pages.entries.map((entry) {
+            return Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => entry.value),
+                  );
+                },
+                child: Text(entry.key),
+              ),
+            );
+          }).toList(),
         ),
       ),
     );

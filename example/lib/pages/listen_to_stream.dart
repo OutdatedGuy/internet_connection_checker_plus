@@ -56,9 +56,9 @@ class _ListenToStreamState extends State<ListenToStream> {
               _connectionStatus == null
                   ? const CircularProgressIndicator.adaptive()
                   : Text(
-                    _connectionStatus.toString(),
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  ),
+                      _connectionStatus.toString(),
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
             ],
           ),
         ),
