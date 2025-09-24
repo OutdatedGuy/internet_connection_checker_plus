@@ -1,10 +1,16 @@
 part of '../internet_connection_checker_plus.dart';
 
-/// A callback function for checking if a specific internet endpoint is reachable.
+/// A callback function for checking if a specific internet endpoint is
+/// reachable.
 ///
-/// Takes a single [InternetCheckOption] and returns a [Future<InternetCheckResult>].
-/// This allows for complete customization of how connectivity is checked for each endpoint.
-typedef ConnectivityCheckCallback = Future<InternetCheckResult> Function(InternetCheckOption option);
+/// Takes a single [InternetCheckOption] and returns a
+/// [Future] that completes with an [InternetCheckResult].
+///
+/// This allows for complete customization of how connectivity is checked for
+/// each endpoint.
+typedef ConnectivityCheckCallback = Future<InternetCheckResult> Function(
+  InternetCheckOption option,
+);
 
 /// A utility class for checking internet connectivity status.
 ///
@@ -77,9 +83,10 @@ class InternetConnection {
   /// - If [useDefaultOptions] is `false`, you must provide a non-empty
   /// [customCheckOptions] list.
   ///
-  /// The [customConnectivityCheck] allows you to provide a custom method for checking
-  /// endpoint reachability. If provided, it will be used for all connectivity checks
-  /// instead of the default HTTP HEAD request implementation.
+  /// The [customConnectivityCheck] allows you to provide a custom method for
+  /// checking endpoint reachability. If provided, it will be used for all
+  /// connectivity checks instead of the default HTTP HEAD request
+  /// implementation.
   InternetConnection.createInstance({
     Duration? checkInterval,
     List<InternetCheckOption>? customCheckOptions,
@@ -141,7 +148,8 @@ class InternetConnection {
 
   /// Function to check reachability of a single network endpoint.
   ///
-  /// This can be customized to allow for different ways of checking connectivity.
+  /// This can be customized to allow for different ways of checking
+  /// connectivity.
   final ConnectivityCheckCallback? customConnectivityCheck;
 
   /// The last known internet connection status result.
@@ -161,6 +169,7 @@ class InternetConnection {
       if (customConnectivityCheck != null) {
         return customConnectivityCheck!.call(option);
       }
+
       final response = await http
           .head(option.uri, headers: option.headers)
           .timeout(option.timeout);
