@@ -1,0 +1,213 @@
+name: ✨ Feature Request
+description: Suggest a new feature or enhancement for internet_connection_checker_plus
+title: "[Feature]: "
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to suggest a new feature! We appreciate your input in making internet_connection_checker_plus better.
+
+        **Before submitting**, please search for existing feature requests to avoid duplicates and consider if this could be implemented as a separate package.
+
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: Is there an existing issue for this?
+      description: Please search to see if a feature request already exists for what you're proposing.
+      options:
+        - label: I have searched the existing issues
+          required: true
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Feature Summary
+      description: A clear and concise description of the feature you'd like to see added.
+      placeholder: Briefly describe the feature you're requesting...
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      description: |
+        What problem does this feature solve? Is your feature request related to a problem you're facing?
+        Help us understand the context and motivation behind this request.
+      placeholder: |
+        I'm always frustrated when...
+        Currently, it's difficult to...
+        Users often need to...
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed_solution
+    attributes:
+      label: Proposed Solution
+      description: |
+        Describe the solution you'd like to see implemented. Be as detailed as possible.
+        Consider the API design, user experience, and implementation approach.
+      placeholder: |
+        I would like to see...
+        The API could work like...
+        Users would be able to...
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: |
+        Describe any alternative solutions or features you've considered.
+        This helps us understand the design space and evaluate different approaches.
+      placeholder: |
+        Alternative 1: ...
+        Alternative 2: ...
+        I also considered...
+
+  - type: dropdown
+    id: platforms
+    attributes:
+      label: Target Platform(s)
+      description: Which platform(s) should this feature target?
+      multiple: true
+      options:
+        - Android
+        - iOS
+        - Web
+        - Windows
+        - macOS
+        - Linux
+        - All platforms
+    validations:
+      required: true
+
+  - type: dropdown
+    id: feature_type
+    attributes:
+      label: Feature Type
+      description: What type of feature is this?
+      options:
+        - New API/Method
+        - Performance improvement
+        - Developer experience enhancement
+        - Platform-specific feature
+        - Breaking change/API redesign
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: use_cases
+    attributes:
+      label: Use Cases
+      description: |
+        Provide specific use cases where this feature would be beneficial.
+        Real-world examples help us understand the practical value.
+      placeholder: |
+        Use case 1: When building an app that needs offline support...
+        Use case 2: For monitoring network quality...
+        Use case 3: In applications where real-time connectivity is critical...
+    validations:
+      required: true
+
+  - type: textarea
+    id: api_design
+    attributes:
+      label: Proposed API Design (Optional)
+      description: |
+        If you have ideas about how the API should look, please share them here.
+        Include method signatures, property names, or usage examples.
+      placeholder: |
+        ```dart
+        // Example API usage:
+        final connection = InternetConnection.createInstance(
+          // Your proposed new parameters...
+        );
+
+        // New methods or properties:
+        connection.newMethod();
+        connection.newProperty = value;
+        ```
+      render: dart
+
+  - type: textarea
+    id: breaking_changes
+    attributes:
+      label: Breaking Changes
+      description: |
+        Would this feature require any breaking changes to the existing API?
+        If yes, please describe what would break and suggest migration strategies.
+      placeholder: |
+        This feature would require breaking changes to...
+        Migration strategy: ...
+        Or: No breaking changes required.
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: How important is this feature to you and your use case?
+      options:
+        - Low - Nice to have
+        - Medium - Would significantly improve my workflow
+        - High - Blocking my use case
+        - Critical - Cannot use the package without this
+    validations:
+      required: true
+
+  - type: textarea
+    id: research
+    attributes:
+      label: Research & References
+      description: |
+        Have you found similar implementations in other packages or platforms?
+        Include links to documentation, examples, or related discussions.
+      placeholder: |
+        - Similar feature in package X: [link]
+        - Native iOS/Android API: [link]
+        - Related discussion: [link]
+        - Documentation: [link]
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional Context
+      description: |
+        Add any other context, screenshots, mockups, or examples that help explain your feature request.
+
+        **Tip:** You can attach images or files by clicking this area to highlight it and then dragging files in.
+      placeholder: Any additional information, mockups, or examples that would help us understand the feature better...
+
+  - type: checkboxes
+    id: implementation
+    attributes:
+      label: Implementation
+      description: |
+        Are you willing to contribute to the implementation of this feature?
+        Check out our [contribution guide](../CONTRIBUTING.md) for more information.
+      options:
+        - label: I'm willing to implement this feature and submit a PR
+          required: false
+        - label: I can help with testing and feedback
+          required: false
+        - label: I can help with documentation
+          required: false
+
+  - type: checkboxes
+    id: community
+    attributes:
+      label: Community Impact
+      description: Help us understand the broader impact of this feature.
+      options:
+        - label: This feature would benefit many users of the package
+          required: false
+        - label: This feature addresses a common pain point
+          required: false
+        - label: This feature would improve accessibility
+          required: false
+        - label: This feature would improve performance for most use cases
+          required: false

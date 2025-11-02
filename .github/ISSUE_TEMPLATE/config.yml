@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📚 Documentation & Getting Started
+    url: https://github.com/OutdatedGuy/internet_connection_checker_plus/blob/main/README.md
+    about: Check out our comprehensive documentation and getting started guide
+  - name: 💬 Community Discussion
+    url: https://github.com/OutdatedGuy/internet_connection_checker_plus/discussions
+    about: Ask questions, share ideas, and discuss with the community
+  - name: 🆘 Need Help?
+    url: https://stackoverflow.com/questions/tagged/flutter+internet-connection
+    about: Get help from the Flutter community on Stack Overflow

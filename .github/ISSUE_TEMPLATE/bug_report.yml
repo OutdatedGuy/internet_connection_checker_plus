@@ -1,0 +1,177 @@
+name: 🐛 Bug Report
+description: Report a bug or issue with internet_connection_checker_plus
+title: "[Bug]: "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report this bug! Please provide as much detail as possible to help us investigate and fix the issue quickly.
+
+        **Before submitting**, please search for existing issues to avoid duplicates.
+
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: Is there an existing issue for this?
+      description: Please search to see if an issue already exists for the bug you encountered.
+      options:
+        - label: I have searched the existing issues
+          required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is.
+      placeholder: Describe what happened and what you expected to happen...
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps_to_reproduce
+    attributes:
+      label: Steps to Reproduce
+      description: Detailed steps to reproduce the behavior
+      placeholder: |
+        1. Go to '...'
+        2. Click on '...'
+        3. Scroll down to '...'
+        4. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected_behavior
+    attributes:
+      label: Expected Behavior
+      description: A clear and concise description of what you expected to happen.
+      placeholder: What should have happened instead?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual_behavior
+    attributes:
+      label: Actual Behavior
+      description: What actually happened instead?
+      placeholder: What actually happened?
+    validations:
+      required: true
+
+  - type: input
+    id: package_version
+    attributes:
+      label: Package Version
+      description: Which version of internet_connection_checker_plus are you using?
+      placeholder: "e.g., 2.0.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: platforms
+    attributes:
+      label: Platform(s)
+      description: Which platform(s) are affected?
+      multiple: true
+      options:
+        - Android
+        - iOS
+        - Web
+        - Windows
+        - macOS
+        - Linux
+    validations:
+      required: true
+
+  - type: dropdown
+    id: flutter_channel
+    attributes:
+      label: Flutter Channel
+      description: Which Flutter channel are you using?
+      options:
+        - stable
+        - beta
+        - master/main
+        - unknown
+    validations:
+      required: true
+
+  - type: textarea
+    id: flutter_doctor
+    attributes:
+      label: Flutter Doctor Output
+      description: |
+        Please run `flutter doctor -v` and paste the complete output below.
+        This helps us understand your development environment.
+      placeholder: Paste the output of `flutter doctor -v` here...
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: sample_code
+    attributes:
+      label: Minimal Reproduction Code
+      description: |
+        Please provide a minimal, complete, and verifiable example that reproduces the issue.
+        This is crucial for us to debug the problem effectively.
+
+        **Note:** Remove any sensitive information like API keys or personal data.
+      placeholder: |
+        ```dart
+        // Paste your minimal reproduction code here
+        import 'package:flutter/material.dart';
+        import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+
+        // Your code that reproduces the issue...
+        ```
+      render: dart
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant Log Output
+      description: |
+        Please copy and paste any relevant log output. This will be automatically formatted into code.
+        Include console output, error messages, stack traces, etc.
+      placeholder: Paste your log output here...
+      render: shell
+
+  - type: textarea
+    id: device_info
+    attributes:
+      label: Device/Network Information
+      description: |
+        Please provide details about the device(s) and network conditions where the issue occurs.
+      placeholder: |
+        **Device Model:** (e.g., iPhone 14, Pixel 7, etc.)
+        **OS Version:** (e.g., iOS 16.1, Android 13, etc.)
+        **Network Type:** (e.g., Wi-Fi, Mobile Data, etc.)
+        **ISP/Network Provider:** (if relevant)
+        **Browser (if Web):** (e.g., Chrome 108, Safari 16, etc.)
+      render: markdown
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional Context
+      description: |
+        Add any other context about the problem here. Screenshots, video recordings, 
+        or links to similar issues can be very helpful.
+
+        **Tip:** You can attach images or files by clicking this area to highlight it and then dragging files in.
+      placeholder: Any additional information that might help us understand the issue better...
+
+  - type: checkboxes
+    id: volunteer
+    attributes:
+      label: Would you like to work on this issue?
+      description: |
+        We welcome contributions! If you're interested in working on this issue, let us know.
+        Check out our [contribution guide](../CONTRIBUTING.md) for more information.
+      options:
+        - label: I'm interested in working on this issue
+          required: false
