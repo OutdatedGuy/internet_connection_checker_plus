@@ -263,7 +263,7 @@ The following URIs are tested and work well with the package _(community approve
 
 | URI                                        | Description                                     |
 | :----------------------------------------- | :---------------------------------------------- |
-| https://cloudflare.com/cdn-cgi/trace       | CORS enabled, no-cache, Response time < `100ms` |
+| https://cloudflare.com/cdn-cgi/trace       | Response time < `100ms`, CORS enabled, no-cache |
 | https://ipapi.co/ip                        | CORS enabled, no-cache                          |
 | https://api.adviceslip.com/advice          | CORS enabled, no-cache                          |
 | https://api.bitbucket.org/2.0/repositories | CORS enabled, no-cache                          |
