@@ -177,7 +177,7 @@ This customization gives you full control over the connectivity detection proces
 
 ### Pause and resume on app lifecycle changes
 
-For situation where you want to pause any network requests when the app goes
+For situations where you want to pause any network requests when the app goes
 into the background and resume them when the app comes back into the foreground
 _(because battery life matters!)_ (see [issue #27]):
 
