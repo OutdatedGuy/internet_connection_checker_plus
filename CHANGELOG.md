@@ -1,3 +1,7 @@
+## 2.9.1+1
+
+- docs: added indie game support section to README in [f554493](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/f554493)
+
 ## 2.9.1
 
 - docs: enhance README with engaging descriptions in [e9e503e](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/e9e503e)
