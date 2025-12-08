@@ -1,3 +1,23 @@
+<div align="center">
+  <h3>🧠 Created by the developer of Brink: Psychological Warfare</h3>
+  <p>
+    <em>"Can you find the sweet spot between bold and delusional?"</em><br>
+    Support the maintenance of this package by checking out my latest indie game!
+  </p>
+
+  <p>
+    <a href="https://play.google.com/store/apps/details?id=rocks.outdatedguy.brink">
+      <img src="https://wsrv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg&h=60" alt="Get it on Google Play">
+    </a>
+    &nbsp;
+    <a href="https://apps.apple.com/app/id6753995293">
+      <img src="https://wsrv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg&h=60" alt="Download on the App Store">
+    </a>
+  </p>
+</div>
+
+---
+
 # Internet Connection Checker Plus
 
 The internet connectivity checker that actually works! 🌐
@@ -7,9 +27,6 @@ Because sometimes `ConnectivityResult.wifi` means you're connected to a router t
 _Like trust issues, but for your network connection. We ping, therefore we know._ ✨
 
 [![pub package][package_svg]][package] [![GitHub][license_svg]](LICENSE)
-
-[![GitHub issues][issues_svg]][issues]
-[![GitHub issues closed][issues_closed_svg]][issues_closed]
 
 <hr />
 
@@ -389,8 +406,6 @@ _(And polished by an AI that's suspiciously good at puns)_ 🌐✨
 
 [package_svg]: https://img.shields.io/pub/v/internet_connection_checker_plus.svg?color=blueviolet
 [license_svg]: https://img.shields.io/github/license/OutdatedGuy/internet_connection_checker_plus.svg?color=purple
-[issues_svg]: https://img.shields.io/github/issues/OutdatedGuy/internet_connection_checker_plus.svg
-[issues_closed_svg]: https://img.shields.io/github/issues-closed/OutdatedGuy/internet_connection_checker_plus.svg?color=green
 
 <!-- Links -->
 
@@ -398,7 +413,6 @@ _(And polished by an AI that's suspiciously good at puns)_ 🌐✨
 [package]: https://pub.dev/packages/internet_connection_checker_plus
 [repository]: https://github.com/OutdatedGuy/internet_connection_checker_plus
 [issues]: https://github.com/OutdatedGuy/internet_connection_checker_plus/issues
-[issues_closed]: https://github.com/OutdatedGuy/internet_connection_checker_plus/issues?q=is%3Aissue+is%3Aclosed
 [issues_report_bug]: https://github.com/OutdatedGuy/internet_connection_checker_plus/issues/new?template=bug_report.yml
 [issues_request_feature]: https://github.com/OutdatedGuy/internet_connection_checker_plus/issues/new?template=feature_request.yml
 [pull_requests]: https://github.com/OutdatedGuy/internet_connection_checker_plus/pulls
