@@ -7,11 +7,11 @@
 
   <p>
     <a href="https://play.google.com/store/apps/details?id=rocks.outdatedguy.brink">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" height="60" alt="Get it on Google Play" />
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Google_Play_Store_badge_EN.svg/200px-Google_Play_Store_badge_EN.svg.png" alt="Get it on Google Play" />
     </a>
     &nbsp;
     <a href="https://apps.apple.com/app/id6753995293">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" height="60" alt="Download on the App Store" />
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Download_on_the_App_Store_Badge.svg/200px-Download_on_the_App_Store_Badge.svg.png" alt="Download on the App Store" />
     </a>
   </p>
 </div>
