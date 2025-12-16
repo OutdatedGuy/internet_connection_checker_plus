@@ -7,11 +7,11 @@
 
   <p>
     <a href="https://play.google.com/store/apps/details?id=rocks.outdatedguy.brink">
-      <img src="https://wsrv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg&h=60" alt="Get it on Google Play">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" height="60" alt="Get it on Google Play" />
     </a>
     &nbsp;
     <a href="https://apps.apple.com/app/id6753995293">
-      <img src="https://wsrv.nl/?url=https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg&h=60" alt="Download on the App Store">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" height="60" alt="Download on the App Store" />
     </a>
   </p>
 </div>
@@ -45,7 +45,9 @@ network requests.
 
 If this package saved you from the eternal torment of "No Internet Connection" errors, consider buying me a coffee! ☕
 
-<a href="https://coff.ee/outdatedguy" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+<a href="https://coff.ee/outdatedguy" target="_blank">
+  <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" height="102" width="363" />
+</a>
 
 _Every coffee helps fuel late-night coding sessions and the occasional existential crisis about whether `null` is a friend or foe._ 🤔☕
 
