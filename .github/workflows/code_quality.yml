@@ -1,19 +1,33 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
 name: Check source code quality
 
 on:
   pull_request:
     branches: ["main"]
+    paths:
+      - "**.dart"
+      - "pubspec.yaml"
+      - "pubspec.lock"
+      - "analysis_options.yaml"
+      - ".github/workflows/**"
+
+  push:
+    branches: ["main"]
+    paths:
+      - "**.dart"
+      - "pubspec.yaml"
+      - "pubspec.lock"
+      - "analysis_options.yaml"
+      - ".github/workflows/**"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   lint:
     name: Check lints
     runs-on: ubuntu-latest
-
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v6
       - uses: subosito/flutter-action@v2
@@ -22,17 +36,16 @@ jobs:
           cache: true
       - run: flutter --version
 
-      # Get flutter dependencies.
       - name: Install dependencies
         run: flutter pub get
 
-      # Check for any formatting issues in the code.
       - name: Verify formatting
         run: dart format --set-exit-if-changed .
 
   analyze:
     name: Check code analysis
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v6
       - uses: subosito/flutter-action@v2
@@ -41,10 +54,8 @@ jobs:
           cache: true
       - run: flutter --version
 
-      # Get flutter dependencies.
       - name: Install dependencies
         run: flutter pub get
 
-      # Statically analyze the Dart code for any errors.
       - name: Analyze project source
         run: flutter analyze .
