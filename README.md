@@ -22,18 +22,20 @@
 
 The internet connectivity checker that actually works! 🌐
 
-Because sometimes `ConnectivityResult.wifi` means you're connected to a router that's as useful as a chocolate teapot! 🍫🫖
+Because sometimes `ConnectivityResult.wifi` means you're connected to a router
+that's as useful as a chocolate teapot! 🍫🫖
 
-_Like trust issues, but for your network connection. We ping, therefore we know._ ✨
+_Like trust issues, but for your network connection. We ping, therefore we
+know._ ✨
 
 [![pub package][package_svg]][package] [![GitHub][license_svg]](LICENSE)
 
 <hr />
 
-**✅ Check real internet connectivity, not just Wi-Fi connection**  
-**🚀 Subsecond response times** _(even on mobile networks!)_  
-**📡 Listen to connectivity changes in real-time**  
-**⚙️ Fully customizable endpoints and success criteria**  
+**✅ Check real internet connectivity, not just Wi-Fi connection**\
+**🚀 Subsecond response times** _(even on mobile networks!)_\
+**📡 Listen to connectivity changes in real-time**\
+**⚙️ Fully customizable endpoints and success criteria**\
 **📱 Cross-platform support** _(Android, iOS, macOS, Linux, Windows, Web)_
 
 This library provides functionality to monitor and verify internet connectivity
@@ -43,13 +45,15 @@ network requests.
 
 ## 💝 Support the Project
 
-If this package saved you from the eternal torment of "No Internet Connection" errors, consider buying me a coffee! ☕
+If this package saved you from the eternal torment of "No Internet Connection"
+errors, consider buying me a coffee! ☕
 
 <a href="https://coff.ee/outdatedguy" target="_blank">
   <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" height="102" width="363" />
 </a>
 
-_Every coffee helps fuel late-night coding sessions and the occasional existential crisis about whether `null` is a friend or foe._ 🤔☕
+_Every coffee helps fuel late-night coding sessions and the occasional
+existential crisis about whether `null` is a friend or foe._ 🤔☕
 
 ## 🌍 Platform Support
 
@@ -58,7 +62,8 @@ _Every coffee helps fuel late-night coding sessions and the occasional existenti
 | Check Connectivity |   ✅    | ✅  |  ✅   |  ✅   |   ✅    | ✅  |
 | Listen to Changes  |   ✅    | ✅  |  ✅   |  ✅   |   ✅    | ✅  |
 
-_Full support across all platforms - because connectivity anxiety is universal!_ 🚀
+_Full support across all platforms - because connectivity anxiety is universal!_
+🚀
 
 ## 📋 Permissions
 
@@ -113,7 +118,8 @@ final subscription = InternetConnection().onStatusChange.listen(
 );
 ```
 
-_Don't forget to cancel the subscription to prevent memory leaks! Your phone's RAM will thank you._ 🧹
+_Don't forget to cancel the subscription to prevent memory leaks! Your phone's
+RAM will thank you._ 🧹
 
 ## 🎯 Advanced Features
 
@@ -130,7 +136,8 @@ final connection = InternetConnection.createInstance(
 final isConnected = await connection.hasInternetAccess;
 ```
 
-_Pro tip: Make sure your endpoints have no caching and aren't CORS blocked on web. We learned this the hard way._ 🌐
+_Pro tip: Make sure your endpoints have no caching and aren't CORS blocked on
+web. We learned this the hard way._ 🌐
 
 ### Using custom success criteria
 
@@ -154,11 +161,13 @@ final connection = InternetConnection.createInstance(
 final isConnected = await connection.hasInternetAccess;
 ```
 
-_Nice status codes! Because sometimes 200 OK is too mainstream for your vibe._ 😎
+_Nice status codes! Because sometimes 200 OK is too mainstream for your vibe._
+😎
 
 ### Using a custom connectivity check method
 
-For advanced use cases, you can completely customize how connectivity checks are performed by providing your own connectivity checker:
+For advanced use cases, you can completely customize how connectivity checks are
+performed by providing your own connectivity checker:
 
 ```dart
 final connection = InternetConnection.createInstance(
@@ -186,7 +195,8 @@ final connection = InternetConnection.createInstance(
 );
 ```
 
-This customization gives you full control over the connectivity detection process, allowing you to:
+This customization gives you full control over the connectivity detection
+process, allowing you to:
 
 - 🔧 Implement platform-specific network detection
 - 🔄 Use alternate connectivity checking strategies
@@ -257,17 +267,22 @@ final connection = InternetConnection.createInstance(
 
 > [!CAUTION]
 >
-> **Use `enableStrictCheck` only with custom-defined URIs, not with the default ones.**
+> **Use `enableStrictCheck` only with custom-defined URIs, not with the default
+> ones.**
 >
-> Using it with the default URIs may lead to unreliable results or service outages, as all default endpoints must be up and reachable for a positive result.
+> Using it with the default URIs may lead to unreliable results or service
+> outages, as all default endpoints must be up and reachable for a positive
+> result.
 
-_Strict mode: For the perfectionists who need ALL the endpoints to respond. We won't judge your trust issues._ 💯
+_Strict mode: For the perfectionists who need ALL the endpoints to respond. We
+won't judge your trust issues._ 💯
 
 ## 📡 Built-in and Additional URIs
 
 ### Default URIs
 
-The following endpoints are checked by default _(carefully selected for speed and reliability!)_:
+The following endpoints are checked by default _(carefully selected for speed
+and reliability!)_:
 
 | URI                                          | Description                                                |
 | :------------------------------------------- | :--------------------------------------------------------- |
@@ -278,7 +293,8 @@ The following endpoints are checked by default _(carefully selected for speed an
 
 ### More Tested URIs
 
-The following URIs are tested and work well with the package _(community approved!)_:
+The following URIs are tested and work well with the package _(community
+approved!)_:
 
 | URI                                        | Description                                     |
 | :----------------------------------------- | :---------------------------------------------- |
@@ -292,7 +308,8 @@ The following URIs are tested and work well with the package _(community approve
 | https://lenta.ru                           | Russia supported, CORS enabled, no-cache        |
 | https://www.gazeta.ru                      | Russia supported, CORS enabled, no-cache        |
 
-_Feel free to use your own trusted endpoints! We don't judge your API choices._ 🎯
+_Feel free to use your own trusted endpoints! We don't judge your API choices._
+🎯
 
 ## If you liked the package, then please give it a [Like 👍🏼][package] and [Star ⭐][repository]
 
@@ -300,24 +317,28 @@ _Your support keeps this project alive and helps us add more features!_ ✨
 
 ## 🤝 Contributing
 
-Found a bug? Have a feature request? Want to make the internet more reliable for everyone?
+Found a bug? Have a feature request? Want to make the internet more reliable for
+everyone?
 
 1. [Check existing issues][issues]
 2. [Report bugs][issues_report_bug]
 3. [Request features][issues_request_feature]
 4. [Submit PRs][pull_requests]
 
-_All contributions welcome! Even if it's just fixing our terrible puns in the docs._ 😅
+_All contributions welcome! Even if it's just fixing our terrible puns in the
+docs._ 😅
 
 ## 📜 License
 
 BSD 3-Clause License - see [LICENSE](LICENSE) file for details.
 
-_TL;DR: Use it, modify it, share it, just don't blame us if your app becomes too reliable._ 😎
+_TL;DR: Use it, modify it, share it, just don't blame us if your app becomes too
+reliable._ 😎
 
 ## 🎁 Easter Egg Hunt
 
-_For the curious developers who actually read READMEs to the end, here's a secret:_ 🕵️
+_For the curious developers who actually read READMEs to the end, here's a
+secret:_ 🕵️
 
 <details>
 <summary>🤖 Click to reveal the truth about this README</summary>
@@ -401,7 +422,8 @@ for checking internet connectivity in Flutter applications.
 
 ---
 
-_Made with ❤️ by developers who got tired of "Connected to Wi-Fi" not meaning "Connected to Internet"_  
+_Made with ❤️ by developers who got tired of "Connected to Wi-Fi" not meaning
+"Connected to Internet"_\
 _(And polished by an AI that's suspiciously good at puns)_ 🌐✨
 
 <!-- Badges URLs -->
