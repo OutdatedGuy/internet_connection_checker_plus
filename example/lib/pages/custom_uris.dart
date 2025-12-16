@@ -23,6 +23,9 @@ class _CustomURIsState extends State<CustomURIs> {
     super.initState();
     _subscription = InternetConnection.createInstance(
       customCheckOptions: [
+        InternetCheckOption(
+          uri: Uri.parse('https://cloudflare.com/cdn-cgi/trace'),
+        ),
         InternetCheckOption(uri: Uri.parse('https://ipapi.co/ip')),
         InternetCheckOption(
           uri: Uri.parse('https://api.adviceslip.com/advice'),
@@ -40,7 +43,6 @@ class _CustomURIsState extends State<CustomURIs> {
           uri: Uri.parse('https://dog.ceo/api/breed/husky/list'),
         ),
         InternetCheckOption(uri: Uri.parse('https://lenta.ru')),
-        InternetCheckOption(uri: Uri.parse('https://www.gazeta.ru')),
       ],
       useDefaultOptions: false,
     ).onStatusChange.listen((status) {
