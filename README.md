@@ -306,7 +306,6 @@ approved!)_:
 | https://randomuser.me/api/?inc=gender      | CORS enabled, no-cache                          |
 | https://dog.ceo/api/breed/husky/list       | CORS enabled, no-cache                          |
 | https://lenta.ru                           | Russia supported, CORS enabled, no-cache        |
-| https://www.gazeta.ru                      | Russia supported, CORS enabled, no-cache        |
 
 _Feel free to use your own trusted endpoints! We don't judge your API choices._
 🎯
