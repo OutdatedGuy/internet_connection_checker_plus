@@ -1,20 +1,30 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
 name: Unit tests
 
 on:
   pull_request:
     branches: ["main"]
+    paths:
+      - "**.dart"
+      - "pubspec.yaml"
+      - ".github/workflows/**"
+
   push:
     branches: ["main"]
+    paths:
+      - "**.dart"
+      - "pubspec.yaml"
+      - ".github/workflows/**"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   unit_test:
     name: Run unit tests
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
       - uses: actions/checkout@v6
       - uses: subosito/flutter-action@v2
@@ -23,10 +33,8 @@ jobs:
           cache: true
       - run: flutter --version
 
-      # Get flutter dependencies.
       - name: Install dependencies
         run: flutter pub get
 
-      # Run the unit tests.
       - name: Run unit tests
         run: flutter test
