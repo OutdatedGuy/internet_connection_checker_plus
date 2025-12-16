@@ -6,7 +6,6 @@ on:
     paths:
       - "**.dart"
       - "pubspec.yaml"
-      - "pubspec.lock"
       - "analysis_options.yaml"
       - ".github/workflows/**"
 
@@ -15,7 +14,6 @@ on:
     paths:
       - "**.dart"
       - "pubspec.yaml"
-      - "pubspec.lock"
       - "analysis_options.yaml"
       - ".github/workflows/**"
 

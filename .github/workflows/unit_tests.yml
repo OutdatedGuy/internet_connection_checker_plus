@@ -6,8 +6,6 @@ on:
     paths:
       - "**.dart"
       - "pubspec.yaml"
-      - "pubspec.lock"
-      - "flutter_test_config.dart"
       - ".github/workflows/**"
 
   push:
@@ -15,8 +13,6 @@ on:
     paths:
       - "**.dart"
       - "pubspec.yaml"
-      - "pubspec.lock"
-      - "flutter_test_config.dart"
       - ".github/workflows/**"
 
 concurrency:
