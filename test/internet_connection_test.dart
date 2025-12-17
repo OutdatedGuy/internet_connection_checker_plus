@@ -122,6 +122,14 @@ void main() {
       test('returns true when all URIs are reachable', () async {
         final checker = InternetConnection.createInstance(
           enableStrictCheck: true,
+          customCheckOptions: [
+            InternetCheckOption(uri: Uri.parse('https://one.one.one.one')),
+            InternetCheckOption(uri: Uri.parse('https://icanhazip.com/')),
+            InternetCheckOption(
+              uri: Uri.parse('https://pokeapi.co/api/v2/ability/?limit=1'),
+            ),
+          ],
+          useDefaultOptions: false,
         );
         expect(await checker.hasInternetAccess, true);
       });
