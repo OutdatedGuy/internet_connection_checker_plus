@@ -1,3 +1,8 @@
+## 2.9.1+2
+
+- docs: fix lifecycle changes code example in [222ef0b](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/222ef0b)
+- docs: update not working endpoint in [df0a004](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/df0a004)
+
 ## 2.9.1+1
 
 - docs: added indie game support section to README in [f554493](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/f554493)
