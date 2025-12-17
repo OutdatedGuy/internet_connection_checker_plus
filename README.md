@@ -240,7 +240,6 @@ class _MyWidgetState extends State<MyWidget> {
           // Handle internet status changes
         });
       },
-      onHide: () => _subscription.cancel(),
       onPause: () => _subscription.cancel(),
     );
   }
