@@ -211,9 +211,10 @@ into the background and resume them when the app comes back into the foreground
 _(because battery life matters!)_ (see [issue #27]).
 
 Since this package uses a broadcast stream created via
-`StreamController.broadcast()` (which buffers events like a squirrel hoarding
-nuts for winter), you should cancel the subscription when paused and create a
-new one when resuming to avoid receiving stale events (see [issue #105]):
+`StreamController.broadcast()` (which [buffers events][stream_buffering] like a
+squirrel hoarding nuts for winter), you should cancel the subscription when
+paused and create a new one when resuming to avoid receiving stale events (see
+[issue #105]):
 
 ```dart
 class MyWidget extends StatefulWidget {
@@ -452,3 +453,4 @@ _(And polished by an AI that's suspiciously good at puns)_ 🌐✨
 [data_connection_checker]: https://pub.dev/packages/data_connection_checker
 [issue #27]: https://github.com/OutdatedGuy/internet_connection_checker_plus/issues/27
 [issue #105]: https://github.com/OutdatedGuy/internet_connection_checker_plus/issues/105
+[stream_buffering]: https://github.com/dart-lang/sdk/blob/bd55135246f3015f35b7dd86cebef367d7d564d4/sdk/lib/async/stream_controller.dart#L143
