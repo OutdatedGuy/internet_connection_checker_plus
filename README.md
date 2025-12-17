@@ -208,7 +208,13 @@ process, allowing you to:
 
 For situations where you want to pause any network requests when the app goes
 into the background and resume them when the app comes back into the foreground
-_(because battery life matters!)_ (see [issue #27]):
+_(because battery life matters!)_ (see [issue #27]).
+
+Since this package uses a broadcast stream created via
+`StreamController.broadcast()` (which [buffers events][stream_buffering] like a
+squirrel hoarding nuts for winter), you should cancel the subscription when
+paused and create a new one when resuming to avoid receiving stale events (see
+[issue #105]):
 
 ```dart
 class MyWidget extends StatefulWidget {
@@ -219,7 +225,7 @@ class MyWidget extends StatefulWidget {
 }
 
 class _MyWidgetState extends State<MyWidget> {
-  late final StreamSubscription<InternetStatus> _subscription;
+  late StreamSubscription<InternetStatus> _subscription;
   late final AppLifecycleListener _listener;
 
   @override
@@ -229,9 +235,12 @@ class _MyWidgetState extends State<MyWidget> {
       // Handle internet status changes
     });
     _listener = AppLifecycleListener(
-      onResume: _subscription.resume,
-      onHide: _subscription.pause,
-      onPause: _subscription.pause,
+      onResume: () {
+        _subscription = InternetConnection().onStatusChange.listen((status) {
+          // Handle internet status changes
+        });
+      },
+      onPause: () => _subscription.cancel(),
     );
   }
 
@@ -442,3 +451,5 @@ _(And polished by an AI that's suspiciously good at puns)_ 🌐✨
 [internet_connection_checker]: https://github.com/RounakTadvi/internet_connection_checker
 [data_connection_checker]: https://pub.dev/packages/data_connection_checker
 [issue #27]: https://github.com/OutdatedGuy/internet_connection_checker_plus/issues/27
+[issue #105]: https://github.com/OutdatedGuy/internet_connection_checker_plus/issues/105
+[stream_buffering]: https://github.com/dart-lang/sdk/blob/bd55135246f3015f35b7dd86cebef367d7d564d4/sdk/lib/async/stream_controller.dart#L143
