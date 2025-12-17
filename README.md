@@ -210,10 +210,10 @@ For situations where you want to pause any network requests when the app goes
 into the background and resume them when the app comes back into the foreground
 _(because battery life matters!)_ (see [issue #27]).
 
-Since this package uses a `BroadcastStream` (which buffers events like a
-squirrel hoarding nuts for winter), you should cancel the subscription when
-paused and create a new one when resuming to avoid receiving stale events (see
-[issue #105]):
+Since this package uses a broadcast stream created via
+`StreamController.broadcast()` (which buffers events like a squirrel hoarding
+nuts for winter), you should cancel the subscription when paused and create a
+new one when resuming to avoid receiving stale events (see [issue #105]):
 
 ```dart
 class MyWidget extends StatefulWidget {
@@ -224,7 +224,7 @@ class MyWidget extends StatefulWidget {
 }
 
 class _MyWidgetState extends State<MyWidget> {
-  late final StreamSubscription<InternetStatus> _subscription;
+  late StreamSubscription<InternetStatus> _subscription;
   late final AppLifecycleListener _listener;
 
   @override
@@ -239,8 +239,8 @@ class _MyWidgetState extends State<MyWidget> {
           // Handle internet status changes
         });
       },
-      onHide: _subscription.cancel,
-      onPause: _subscription.cancel,
+      onHide: () => _subscription.cancel(),
+      onPause: () => _subscription.cancel(),
     );
   }
 
