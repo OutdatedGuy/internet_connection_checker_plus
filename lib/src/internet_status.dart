@@ -18,6 +18,9 @@ enum InternetStatus {
   /// Internet is available because at least one of the HEAD requests succeeded.
   connected,
 
+  /// Internet is available but the connection is slow.
+  slow,
+
   /// None of the HEAD requests succeeded. Basically, no internet.
   disconnected,
 }

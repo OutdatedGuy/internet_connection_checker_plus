@@ -71,3 +71,4 @@ part 'src/internet_check_option.dart';
 part 'src/internet_check_result.dart';
 part 'src/internet_connection.dart';
 part 'src/internet_status.dart';
+part 'src/slow_connection_config.dart';

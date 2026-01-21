@@ -14,6 +14,7 @@ class InternetCheckResult {
   InternetCheckResult({
     required this.option,
     required this.isSuccess,
+    this.responseTime,
   });
 
   /// The option used to check internet connection for this result.
@@ -25,11 +26,16 @@ class InternetCheckResult {
   /// Otherwise, it was unsuccessful.
   final bool isSuccess;
 
+  /// The time it took to get the response.
+  /// This will be null for custom connectivity checks.
+  final Duration? responseTime;
+
   @override
   String toString() {
     return 'InternetCheckResult(\n'
         '  option: ${option.toString().replaceAll('\n', '\n  ')},\n'
         '  isSuccess: $isSuccess\n'
+        '  responseTime: $responseTime\n'
         ')';
   }
 }

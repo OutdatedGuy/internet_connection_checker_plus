@@ -92,6 +92,7 @@ class InternetConnection {
     List<InternetCheckOption>? customCheckOptions,
     bool useDefaultOptions = true,
     this.enableStrictCheck = false,
+    this.slowConnectionConfig,
     this.customConnectivityCheck,
   })  : _checkInterval = checkInterval ?? _defaultCheckInterval,
         assert(
@@ -150,6 +151,8 @@ class InternetConnection {
   /// outages.
   final bool enableStrictCheck;
 
+  final SlowConnectionConfig? slowConnectionConfig;
+
   /// Function to check reachability of a single network endpoint.
   ///
   /// This can be customized to allow for different ways of checking
@@ -162,30 +165,34 @@ class InternetConnection {
   /// The handle for the timer used for periodic status checks.
   Timer? _timerHandle;
 
+  /// Connectivity subscription.
+  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
+
   /// Checks if the [Uri] specified in [option] is reachable.
   ///
   /// Returns a [Future] that completes with an [InternetCheckResult] indicating
   /// whether the host is reachable or not.
-  Future<InternetCheckResult> _checkReachabilityFor(
-    InternetCheckOption option,
-  ) async {
+  Future<InternetCheckResult> _checkReachabilityFor(InternetCheckOption option) async {
+    final stopwatch = Stopwatch()..start();
     try {
-      if (customConnectivityCheck != null) {
-        return customConnectivityCheck!.call(option);
-      }
+      if (customConnectivityCheck != null) return customConnectivityCheck!(option);
 
-      final response = await http
-          .head(option.uri, headers: option.headers)
-          .timeout(option.timeout);
+      final response = await http.head(option.uri, headers: option.headers).timeout(option.timeout);
+      final responseTime = stopwatch.elapsed;
+      stopwatch.stop();
 
       return InternetCheckResult(
         option: option,
         isSuccess: option.responseStatusFn(response),
+        responseTime: responseTime,
       );
     } catch (_) {
+      stopwatch.stop();
+
       return InternetCheckResult(
         option: option,
         isSuccess: false,
+        responseTime: stopwatch.elapsed,
       );
     }
   }
@@ -206,64 +213,118 @@ class InternetConnection {
   ///
   /// Returns a [Future] that completes with a boolean value indicating
   /// whether internet access is available or not.
-  Future<bool> get hasInternetAccess async {
-    final completer = Completer<bool>();
-    int remainingChecks = _internetCheckOptions.length;
-    int successCount = 0;
+  /// Checks if there is internet access by verifying connectivity to the
+  /// specified [Uri]s.
+  Future<bool> get hasInternetAccess =>
+      enableStrictCheck ? _hasInternetAccessStrict() : _hasInternetAccessNonStrict();
 
-    for (final option in _internetCheckOptions) {
-      unawaited(
-        _checkReachabilityFor(option).then((result) {
-          if (result.isSuccess) {
-            successCount += 1;
-          }
+  /// Checks internet access in strict mode (all endpoints must succeed)
+  Future<bool> _hasInternetAccessStrict() async {
+    final results = await Future.wait(_internetCheckOptions.map(_checkReachabilityFor));
 
-          remainingChecks -= 1;
+    return results.every((result) => result.isSuccess);
+  }
 
-          if (completer.isCompleted) return;
+  /// Checks internet access in non-strict mode (at least one endpoint must succeed)
+  Future<bool> _hasInternetAccessNonStrict() async {
+    final futures = _internetCheckOptions.map(_checkReachabilityFor);
 
-          if (!enableStrictCheck && result.isSuccess) {
-            // Return true immediately if not in strict mode and a success is found.
-            completer.complete(true);
-          } else if (enableStrictCheck && remainingChecks == 0) {
-            // In strict mode, complete only when all checks are done.
-            completer.complete(successCount == _internetCheckOptions.length);
-          } else if (!enableStrictCheck && remainingChecks == 0) {
-            // In non-strict mode, complete as false if no success is found.
-            completer.complete(false);
-          }
-        }),
-      );
+    for (final future in futures) {
+      try {
+        final result = await future;
+        if (result.isSuccess) return true;
+      } catch (_) {
+        // Continue checking other endpoints
+        continue;
+      }
     }
 
-    return completer.future;
+    return false;
   }
 
   /// Returns the current internet connection status.
   ///
   /// Returns a [Future] that completes with the [InternetStatus] indicating
   /// the current internet connection status.
-  Future<InternetStatus> get internetStatus async => await hasInternetAccess
-      ? InternetStatus.connected
-      : InternetStatus.disconnected;
+  /// Returns the current internet connection status.
+  Future<InternetStatus> get internetStatus async {
+    if (slowConnectionConfig == null) {
+      // No slow connection detection - use simple boolean check
+      return await hasInternetAccess ? InternetStatus.connected : InternetStatus.disconnected;
+    }
+    final slowConnectionThreshold = slowConnectionConfig!.slowConnectionThreshold;
+
+    return enableStrictCheck
+        ? await _internetStatusWithSlowDetectionStrict(
+            slowConnectionThreshold: slowConnectionThreshold)
+        : await _internetStatusWithSlowDetectionNonStrict(
+            slowConnectionThreshold: slowConnectionThreshold);
+  }
+
+  /// Determines internet status with slow detection in strict mode
+  Future<InternetStatus> _internetStatusWithSlowDetectionStrict({
+    required Duration slowConnectionThreshold,
+  }) async {
+    final results = await Future.wait(_internetCheckOptions.map(_checkReachabilityFor));
+
+    // Check if all endpoints succeeded
+    final allSucceeded = results.every((result) => result.isSuccess);
+    if (!allSucceeded) return InternetStatus.disconnected;
+
+    // Check for slow connection
+    final anySlow = results.any(
+        (result) => result.responseTime != null && result.responseTime! > slowConnectionThreshold);
+
+    return anySlow ? InternetStatus.slow : InternetStatus.connected;
+  }
+
+  /// Determines internet status with slow detection in non-strict mode
+  Future<InternetStatus> _internetStatusWithSlowDetectionNonStrict({
+    required Duration slowConnectionThreshold,
+  }) async {
+    final futures = _internetCheckOptions.map(_checkReachabilityFor);
+
+    bool foundFastConnection = false;
+    bool foundAnyConnection = false;
+
+    for (final future in futures) {
+      try {
+        final result = await future;
+        if (result.isSuccess) {
+          foundAnyConnection = true;
+
+          // Check if this connection is fast
+          if (result.responseTime != null && result.responseTime! <= slowConnectionThreshold) {
+            foundFastConnection = true;
+          }
+        }
+      } catch (_) {
+        continue;
+      }
+
+      // Early return: if we found a fast connection, return connected immediately
+      if (foundFastConnection) return InternetStatus.connected;
+    }
+
+    // We found connections but they were all slow
+    if (foundAnyConnection) return InternetStatus.slow;
+
+    return InternetStatus.disconnected;
+  }
 
   /// Internal method for emitting status updates.
   ///
   /// Updates the status and emits it if there are listeners.
   Future<void> _maybeEmitStatusUpdate() async {
+    if (!_statusController.hasListener) return;
+
     _startListeningToConnectivityChanges();
     _timerHandle?.cancel();
 
     final currentStatus = await internetStatus;
-
-    if (!_statusController.hasListener) return;
-
-    if (_lastStatus != currentStatus && _statusController.hasListener) {
-      _statusController.add(currentStatus);
-    }
+    if (_lastStatus != currentStatus) _statusController.add(currentStatus);
 
     _timerHandle = Timer(_checkInterval, _maybeEmitStatusUpdate);
-
     _lastStatus = currentStatus;
   }
 
@@ -273,9 +334,8 @@ class InternetConnection {
   void _handleStatusChangeCancel() {
     if (_statusController.hasListener) return;
 
-    _connectivitySubscription?.cancel().then((_) {
-      _connectivitySubscription = null;
-    });
+    _connectivitySubscription?.cancel();
+    _connectivitySubscription = null;
     _timerHandle?.cancel();
     _timerHandle = null;
     _lastStatus = null;
@@ -287,20 +347,16 @@ class InternetConnection {
   /// Stream that emits internet connection status changes.
   Stream<InternetStatus> get onStatusChange => _statusController.stream;
 
-  /// Connectivity subscription.
-  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
-
   /// Starts listening to connectivity changes from [connectivity_plus] package
   /// using the [Connectivity.onConnectivityChanged] stream.
   ///
   /// [connectivity_plus]: https://pub.dev/packages/connectivity_plus
   void _startListeningToConnectivityChanges() {
     if (_connectivitySubscription != null) return;
+
     _connectivitySubscription = Connectivity().onConnectivityChanged.listen(
       (_) {
-        if (_statusController.hasListener) {
-          _maybeEmitStatusUpdate();
-        }
+        if (_statusController.hasListener) _maybeEmitStatusUpdate();
       },
       onError: (_, __) {},
     );

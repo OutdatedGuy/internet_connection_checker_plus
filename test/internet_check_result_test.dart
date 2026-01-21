@@ -1,6 +1,5 @@
 // Flutter Packages
 import 'package:flutter_test/flutter_test.dart';
-
 // This Package
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
@@ -23,6 +22,7 @@ void main() {
           '    headers: {}\n'
           '  ),\n'
           '  isSuccess: true\n'
+          '  responseTime: null\n'
           ')';
 
       expect(result.toString(), expectedString);
