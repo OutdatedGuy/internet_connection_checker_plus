@@ -169,10 +169,17 @@ class InternetConnection {
   ///
   /// Returns a [Future] that completes with an [InternetCheckResult] indicating
   /// whether the host is reachable or not.
-  Future<InternetCheckResult> _checkReachabilityFor(InternetCheckOption option) async {
+  Future<InternetCheckResult> _checkReachabilityFor(
+    InternetCheckOption option,
+  ) async {
     try {
-      if (customConnectivityCheck != null) return customConnectivityCheck!(option);
-      final response = await http.head(option.uri, headers: option.headers).timeout(option.timeout);
+      if (customConnectivityCheck != null) {
+        return customConnectivityCheck!.call(option);
+      }
+
+      final response = await http
+          .head(option.uri, headers: option.headers)
+          .timeout(option.timeout);
 
       return InternetCheckResult(
         option: option,
@@ -237,8 +244,9 @@ class InternetConnection {
   ///
   /// Returns a [Future] that completes with the [InternetStatus] indicating
   /// the current internet connection status.
-  Future<InternetStatus> get internetStatus async =>
-      await hasInternetAccess ? InternetStatus.connected : InternetStatus.disconnected;
+  Future<InternetStatus> get internetStatus async => await hasInternetAccess
+      ? InternetStatus.connected
+      : InternetStatus.disconnected;
 
   /// Internal method for emitting status updates.
   ///
@@ -253,6 +261,7 @@ class InternetConnection {
     if (_lastStatus != currentStatus) _statusController.add(currentStatus);
 
     _timerHandle = Timer(_checkInterval, _maybeEmitStatusUpdate);
+
     _lastStatus = currentStatus;
   }
 
@@ -282,10 +291,11 @@ class InternetConnection {
   /// [connectivity_plus]: https://pub.dev/packages/connectivity_plus
   void _startListeningToConnectivityChanges() {
     if (_connectivitySubscription != null) return;
-
     _connectivitySubscription = Connectivity().onConnectivityChanged.listen(
       (_) {
-        if (_statusController.hasListener) _maybeEmitStatusUpdate();
+        if (_statusController.hasListener) {
+          _maybeEmitStatusUpdate();
+        }
       },
       onError: (_, __) {},
     );
