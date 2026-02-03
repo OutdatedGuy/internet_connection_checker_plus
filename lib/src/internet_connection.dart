@@ -162,6 +162,9 @@ class InternetConnection {
   /// The handle for the timer used for periodic status checks.
   Timer? _timerHandle;
 
+  /// Connectivity subscription.
+  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
+
   /// Checks if the [Uri] specified in [option] is reachable.
   ///
   /// Returns a [Future] that completes with an [InternetCheckResult] indicating
@@ -206,37 +209,35 @@ class InternetConnection {
   ///
   /// Returns a [Future] that completes with a boolean value indicating
   /// whether internet access is available or not.
-  Future<bool> get hasInternetAccess async {
-    final completer = Completer<bool>();
-    int remainingChecks = _internetCheckOptions.length;
-    int successCount = 0;
+  /// Checks if there is internet access by verifying connectivity to the
+  /// specified [Uri]s.
+  Future<bool> get hasInternetAccess =>
+      enableStrictCheck ? _hasInternetAccessStrict() : _hasInternetAccessNonStrict();
 
-    for (final option in _internetCheckOptions) {
-      unawaited(
-        _checkReachabilityFor(option).then((result) {
-          if (result.isSuccess) {
-            successCount += 1;
-          }
+  /// Checks internet access in strict mode (all endpoints must succeed)
+  Future<bool> _hasInternetAccessStrict() async {
+    final results = await Future.wait(
+      _internetCheckOptions.map(_checkReachabilityFor),
+    );
 
-          remainingChecks -= 1;
+    return results.every((result) => result.isSuccess);
+  }
 
-          if (completer.isCompleted) return;
+  /// Checks internet access in non-strict mode (at least one endpoint must succeed)
+  Future<bool> _hasInternetAccessNonStrict() async {
+    final futures = _internetCheckOptions.map(_checkReachabilityFor);
 
-          if (!enableStrictCheck && result.isSuccess) {
-            // Return true immediately if not in strict mode and a success is found.
-            completer.complete(true);
-          } else if (enableStrictCheck && remainingChecks == 0) {
-            // In strict mode, complete only when all checks are done.
-            completer.complete(successCount == _internetCheckOptions.length);
-          } else if (!enableStrictCheck && remainingChecks == 0) {
-            // In non-strict mode, complete as false if no success is found.
-            completer.complete(false);
-          }
-        }),
-      );
+    for (final future in futures) {
+      try {
+        final result = await future;
+        if (result.isSuccess) return true;
+      } catch (_) {
+        // Continue checking other endpoints
+        continue;
+      }
     }
 
-    return completer.future;
+    return false;
   }
 
   /// Returns the current internet connection status.
@@ -251,16 +252,13 @@ class InternetConnection {
   ///
   /// Updates the status and emits it if there are listeners.
   Future<void> _maybeEmitStatusUpdate() async {
+    if (!_statusController.hasListener) return;
+
     _startListeningToConnectivityChanges();
     _timerHandle?.cancel();
 
     final currentStatus = await internetStatus;
-
-    if (!_statusController.hasListener) return;
-
-    if (_lastStatus != currentStatus && _statusController.hasListener) {
-      _statusController.add(currentStatus);
-    }
+    if (_lastStatus != currentStatus) _statusController.add(currentStatus);
 
     _timerHandle = Timer(_checkInterval, _maybeEmitStatusUpdate);
 
@@ -286,9 +284,6 @@ class InternetConnection {
 
   /// Stream that emits internet connection status changes.
   Stream<InternetStatus> get onStatusChange => _statusController.stream;
-
-  /// Connectivity subscription.
-  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
 
   /// Starts listening to connectivity changes from [connectivity_plus] package
   /// using the [Connectivity.onConnectivityChanged] stream.
