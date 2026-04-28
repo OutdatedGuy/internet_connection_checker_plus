@@ -39,9 +39,8 @@ know._ ✨
 **📱 Cross-platform support** _(Android, iOS, macOS, Linux, Windows, Web)_
 
 This library provides functionality to monitor and verify internet connectivity
-by checking reachability to various URIs. It relies on the `connectivity_plus`
-package for listening to connectivity changes and the `http` package for making
-network requests.
+by checking reachability to various URIs. It relies on the `http` package for
+making network requests.
 
 ## 💝 Support the Project
 

@@ -4,6 +4,9 @@ import 'dart:async';
 // Flutter Packages
 import 'package:flutter/material.dart';
 
+// Third Party Packages
+import 'package:connectivity_plus/connectivity_plus.dart';
+
 // This Package
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
@@ -21,7 +24,9 @@ class _ListenToStreamState extends State<ListenToStream> {
   @override
   void initState() {
     super.initState();
-    _subscription = InternetConnection().onStatusChange.listen((status) {
+    _subscription = InternetConnection.createInstance(
+      triggerStream: Connectivity().onConnectivityChanged,
+    ).onStatusChange.listen((status) {
       setState(() {
         _connectionStatus = status;
       });

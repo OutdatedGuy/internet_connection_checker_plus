@@ -148,10 +148,6 @@ void main() {
     });
 
     group('checkInterval', () {
-      setUp(() {
-        TestWidgetsFlutterBinding.ensureInitialized();
-      });
-
       test('executes requests with given frequency', () async {
         await TestHttpClient.run((client) async {
           int counter = 0;

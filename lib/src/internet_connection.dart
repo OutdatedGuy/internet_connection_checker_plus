@@ -16,10 +16,8 @@ typedef ConnectivityCheckCallback = Future<InternetCheckResult> Function(
 ///
 /// This class provides functionality to monitor and verify internet
 /// connectivity by checking reachability to various [Uri]s. It relies on the
-/// [connectivity_plus] package for listening to connectivity changes and the
 /// [http][http_link] package for making network requests.
 ///
-/// [connectivity_plus]: https://pub.dev/packages/connectivity_plus
 /// [http_link]: https://pub.dev/packages/http
 ///
 /// <br />
@@ -93,6 +91,7 @@ class InternetConnection {
     bool useDefaultOptions = true,
     this.enableStrictCheck = false,
     this.customConnectivityCheck,
+    this.triggerStream,
   })  : _checkInterval = checkInterval ?? _defaultCheckInterval,
         assert(
           useDefaultOptions || customCheckOptions?.isNotEmpty == true,
@@ -155,6 +154,10 @@ class InternetConnection {
   /// This can be customized to allow for different ways of checking
   /// connectivity.
   final ConnectivityCheckCallback? customConnectivityCheck;
+
+  /// An optional stream that triggers an immediate internet connection check
+  /// whenever it emits an event.
+  final Stream? triggerStream;
 
   /// The last known internet connection status result.
   InternetStatus? _lastStatus;
@@ -251,7 +254,7 @@ class InternetConnection {
   ///
   /// Updates the status and emits it if there are listeners.
   Future<void> _maybeEmitStatusUpdate() async {
-    _startListeningToConnectivityChanges();
+    _startListeningToTriggerEvents();
     _timerHandle?.cancel();
 
     final currentStatus = await internetStatus;
@@ -273,8 +276,8 @@ class InternetConnection {
   void _handleStatusChangeCancel() {
     if (_statusController.hasListener) return;
 
-    _connectivitySubscription?.cancel().then((_) {
-      _connectivitySubscription = null;
+    _triggerSubscription?.cancel().then((_) {
+      _triggerSubscription = null;
     });
     _timerHandle?.cancel();
     _timerHandle = null;
@@ -288,15 +291,14 @@ class InternetConnection {
   Stream<InternetStatus> get onStatusChange => _statusController.stream;
 
   /// Connectivity subscription.
-  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
+  StreamSubscription? _triggerSubscription;
 
-  /// Starts listening to connectivity changes from [connectivity_plus] package
-  /// using the [Connectivity.onConnectivityChanged] stream.
-  ///
-  /// [connectivity_plus]: https://pub.dev/packages/connectivity_plus
-  void _startListeningToConnectivityChanges() {
-    if (_connectivitySubscription != null) return;
-    _connectivitySubscription = Connectivity().onConnectivityChanged.listen(
+  /// Starts listening to trigger events from [triggerStream].
+  void _startListeningToTriggerEvents() {
+    if (_triggerSubscription != null) return;
+    if (triggerStream == null) return;
+
+    _triggerSubscription = triggerStream!.listen(
       (_) {
         if (_statusController.hasListener) {
           _maybeEmitStatusUpdate();
