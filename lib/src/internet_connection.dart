@@ -115,10 +115,12 @@ class InternetConnection {
     InternetCheckOption(uri: Uri.parse('https://one.one.one.one')),
     InternetCheckOption(uri: Uri.parse('https://icanhazip.com/')),
     InternetCheckOption(
-      uri: Uri.parse('https://jsonplaceholder.typicode.com/todos/1'),
+      uri: Uri.parse(
+        'https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js',
+      ),
     ),
     InternetCheckOption(
-      uri: Uri.parse('https://pokeapi.co/api/v2/ability/?limit=1'),
+      uri: Uri.parse('https://captive.apple.com/internet-check'),
     ),
   ];
 

@@ -292,12 +292,12 @@ won't judge your trust issues._ 💯
 The following endpoints are checked by default _(carefully selected for speed
 and reliability!)_:
 
-| URI                                          | Description                                                |
-| :------------------------------------------- | :--------------------------------------------------------- |
-| https://one.one.one.one                      | Response time is less than `100ms`, CORS enabled, no-cache |
-| https://icanhazip.com                        | Response time is less than `100ms`, CORS enabled, no-cache |
-| https://jsonplaceholder.typicode.com/todos/1 | Response time is less than `100ms`, CORS enabled, no-cache |
-| https://pokeapi.co/api/v2/ability/?limit=1   | Response time is less than `100ms`, CORS enabled, no-cache |
+| URI                                                              | Description                                                |
+| :--------------------------------------------------------------- | :--------------------------------------------------------- |
+| https://one.one.one.one                                          | Response time is less than `100ms`, CORS enabled, no-cache |
+| https://icanhazip.com                                            | Response time is less than `100ms`, CORS enabled, no-cache |
+| https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js | Response time is less than `100ms`, CORS enabled, no-cache |
+| https://captive.apple.com/internet-check                         | Response time is less than `100ms`, CORS enabled, no-cache |
 
 ### More Tested URIs
 
