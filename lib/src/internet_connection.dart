@@ -288,7 +288,12 @@ class InternetConnection {
   InternetStatus? get lastTryResults => _lastStatus;
 
   /// Stream that emits internet connection status changes.
-  Stream<InternetStatus> get onStatusChange => _statusController.stream;
+  Stream<InternetStatus> get onStatusChange async* {
+    if (_lastStatus != null) {
+      yield _lastStatus!;
+    }
+    yield* _statusController.stream;
+  }
 
   /// Connectivity subscription.
   StreamSubscription? _triggerSubscription;
