@@ -3,10 +3,8 @@
 ///
 /// This library provides functionality to monitor and verify internet
 /// connectivity by checking reachability to various [Uri]s. It relies on the
-/// [connectivity_plus] package for listening to connectivity changes and the
 /// [http][http_link] package for making network requests.
 ///
-/// [connectivity_plus]: https://pub.dev/packages/connectivity_plus
 /// [http_link]: https://pub.dev/packages/http
 ///
 /// <br />
@@ -63,7 +61,6 @@ library internet_connection_checker_plus;
 import 'dart:async';
 
 // Third Party Packages
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:http/http.dart' as http;
 
 // Package Files
