@@ -103,7 +103,10 @@ class InternetConnection {
       if (customCheckOptions != null) ...customCheckOptions,
     ];
 
-    _statusController.onListen = _maybeEmitStatusUpdate;
+    _statusController.onListen = () {
+      _startListeningToTriggerEvents();
+      _maybeEmitStatusUpdate();
+    };
     _statusController.onCancel = _handleStatusChangeCancel;
   }
 
@@ -256,31 +259,26 @@ class InternetConnection {
   ///
   /// Updates the status and emits it if there are listeners.
   Future<void> _maybeEmitStatusUpdate() async {
-    _startListeningToTriggerEvents();
     _timerHandle?.cancel();
-
-    final currentStatus = await internetStatus;
 
     if (!_statusController.hasListener) return;
 
+    final currentStatus = await internetStatus;
+
     if (_lastStatus != currentStatus && _statusController.hasListener) {
+      _lastStatus = currentStatus;
       _statusController.add(currentStatus);
     }
 
     _timerHandle = Timer(_checkInterval, _maybeEmitStatusUpdate);
-
-    _lastStatus = currentStatus;
   }
 
   /// Handles cancellation of status change events.
   ///
   /// Cancels the timer and resets the last status.
   void _handleStatusChangeCancel() {
-    if (_statusController.hasListener) return;
-
-    _triggerSubscription?.cancel().then((_) {
-      _triggerSubscription = null;
-    });
+    _triggerSubscription?.cancel();
+    _triggerSubscription = null;
     _timerHandle?.cancel();
     _timerHandle = null;
     _lastStatus = null;
@@ -301,11 +299,7 @@ class InternetConnection {
     if (triggerStream == null) return;
 
     _triggerSubscription = triggerStream!.listen(
-      (_) {
-        if (_statusController.hasListener) {
-          _maybeEmitStatusUpdate();
-        }
-      },
+      (_) => _maybeEmitStatusUpdate(),
       onError: (_, __) {},
     );
   }
