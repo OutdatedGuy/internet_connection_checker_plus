@@ -1,10 +1,6 @@
-// Flutter Packages
-import 'package:flutter_test/flutter_test.dart';
-
-// This Package
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+import 'package:test/test.dart';
 
-// Mocks
 import '__mocks__/test_http_client.dart';
 
 void main() {

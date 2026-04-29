@@ -57,13 +57,10 @@
 /// ```
 library internet_connection_checker_plus;
 
-// Dart Packages
 import 'dart:async';
 
-// Third Party Packages
 import 'package:http/http.dart' as http;
 
-// Package Files
 part 'src/internet_check_option.dart';
 part 'src/internet_check_result.dart';
 part 'src/internet_connection.dart';
