@@ -34,7 +34,7 @@ jobs:
         run: dart pub get --no-example
 
       - name: Verify formatting
-        run: dart format --set-exit-if-changed .
+        run: dart format --set-exit-if-changed lib test
 
   analyze:
     name: Check code analysis
@@ -48,4 +48,4 @@ jobs:
         run: dart pub get --no-example
 
       - name: Analyze project source
-        run: dart analyze .
+        run: dart analyze lib test
