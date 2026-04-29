@@ -1,13 +1,7 @@
-// Dart Packages
 import 'dart:async';
 
-// Flutter Packages
-import 'package:flutter/material.dart';
-
-// Third Party Packages
 import 'package:connectivity_plus/connectivity_plus.dart';
-
-// This Package
+import 'package:flutter/material.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 class ListenToStream extends StatefulWidget {

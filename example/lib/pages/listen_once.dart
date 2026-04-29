@@ -1,7 +1,4 @@
-// Flutter Packages
 import 'package:flutter/material.dart';
-
-// This Package
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 class ListenOnce extends StatefulWidget {
