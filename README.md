@@ -110,7 +110,7 @@ errors, consider buying me a coffee! ☕
 
 Override the default validation endpoints and acceptable HTTP status codes.
 
-> [!INFO]
+> [!IMPORTANT]
 >
 > Ensure your custom endpoints have no caching and aren't CORS blocked if you
 > intend to use them on the Web platform.
