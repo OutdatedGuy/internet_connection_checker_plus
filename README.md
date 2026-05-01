@@ -13,7 +13,7 @@
     >
       <img
         src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
-        height="60"
+        width="200"
         alt="Get it on Google Play"
       />
     </a>
@@ -21,7 +21,7 @@
     <a href="https://apps.apple.com/app/id6753995293" target="_blank">
       <img
         src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg"
-        height="60"
+        width="200"
         alt="Download on the App Store"
       />
     </a>
