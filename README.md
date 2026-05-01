@@ -41,10 +41,10 @@ connectivity) but cannot guarantee actual internet reachability. This package
 proactively verifies external routing by checking reachability and response
 statuses against highly available global endpoints.
 
-> [!WARNING]
+> [!NOTE]
 >
-> **🚀 v3 is now available!** Which removed the `connectivity_plus` dependency
-> to make this a pure Dart package. Please read the
+> **🚀 v3 is now available!** It removes the `connectivity_plus` dependency to
+> make this a pure Dart package. Please read the
 > [v3 Migration Guide](MIGRATION_V3.md) to understand the breaking changes and
 > how to update your project.
 
