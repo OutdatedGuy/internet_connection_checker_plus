@@ -1,3 +1,19 @@
+## 3.0.0
+
+Please read the [v3 Migration Guide](MIGRATION_V3.md) for details on updating your project.
+
+### Breaking Changes
+
+- feat!: remove dependency on connectivity_plus in [c09b432](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/c09b432)
+
+### Other Changes
+
+- feat: update library to a Dart package in [4267811](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/4267811)
+- feat: update default endpoints to more robust ones in [78c54ab](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/78c54ab)
+- fix: 2nd and later listeners never get internet status in [2313d04](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/2313d04)
+- docs: revamp readme for cleaner documentation in [dc47714](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/dc47714)
+- chore: updated example app to Flutter v3.41.7 in [fd3c5e6](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/fd3c5e6)
+
 ## 2.9.1+2
 
 - docs: fix lifecycle changes code example in [222ef0b](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/222ef0b)
@@ -101,12 +117,10 @@
 ## 1.0.0
 
 - **BREAKING CHANGES**
-
   - Using `http` requests instead of `Socket` connections.
   - Replaced `InternetAddress` with `Uri`.
 
 - **NEW FEATURES**
-
   - Added **_proper_** `Web` support.
   - Faster connection checks.
   - Reduced latency.
