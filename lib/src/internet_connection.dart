@@ -65,7 +65,10 @@ class InternetConnection {
   /// Returns an instance of [InternetConnection].
   ///
   /// This is a singleton class, meaning that there is only one instance of it.
-  factory InternetConnection() => _instance;
+  factory InternetConnection() {
+    _instance ??= InternetConnection.createInstance();
+    return _instance!;
+  }
 
   /// Creates an instance of [InternetConnection].
   ///
@@ -134,7 +137,7 @@ class InternetConnection {
   final _statusController = StreamController<InternetStatus>.broadcast();
 
   /// The singleton instance of [InternetConnection].
-  static final _instance = InternetConnection.createInstance();
+  static InternetConnection? _instance;
 
   /// The duration between consecutive status checks.
   ///
