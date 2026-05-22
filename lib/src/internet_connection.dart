@@ -62,9 +62,7 @@ typedef ConnectivityCheckCallback = Future<InternetCheckResult> Function(
 /// listener.cancel();
 /// ```
 class InternetConnection {
-  /// Returns an instance of [InternetConnection].
-  ///
-  /// This is a singleton class, meaning that there is only one instance of it.
+  /// Returns the singleton instance of [InternetConnection].
   factory InternetConnection() => _instance;
 
   /// Creates an instance of [InternetConnection].
