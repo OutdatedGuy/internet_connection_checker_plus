@@ -114,7 +114,7 @@ class InternetConnection {
   static const _defaultCheckInterval = Duration(seconds: 10);
 
   /// The default list of [Uri]s used for checking internet reachability.
-  static final List<InternetCheckOption> _defaultCheckOptions = [
+  static final _defaultCheckOptions = List<InternetCheckOption>.unmodifiable([
     InternetCheckOption(uri: Uri.parse('https://one.one.one.one')),
     InternetCheckOption(uri: Uri.parse('https://icanhazip.com')),
     InternetCheckOption(
@@ -125,7 +125,7 @@ class InternetConnection {
     InternetCheckOption(
       uri: Uri.parse('https://captive.apple.com/internet-check'),
     ),
-  ];
+  ]);
 
   /// The list of [Uri]s used for checking internet reachability.
   late List<InternetCheckOption> _internetCheckOptions;
