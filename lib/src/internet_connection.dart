@@ -98,10 +98,10 @@ class InternetConnection {
           'You must provide a list of options if you are not using the '
           'default ones.',
         ) {
-    _internetCheckOptions = [
+    _internetCheckOptions = List.unmodifiable([
       if (useDefaultOptions) ..._defaultCheckOptions,
       if (customCheckOptions != null) ...customCheckOptions,
-    ];
+    ]);
 
     _statusController.onListen = () {
       _startListeningToTriggerEvents();
@@ -128,7 +128,7 @@ class InternetConnection {
   ]);
 
   /// The list of [Uri]s used for checking internet reachability.
-  late List<InternetCheckOption> _internetCheckOptions;
+  late final List<InternetCheckOption> _internetCheckOptions;
 
   /// The controller for the internet connection status stream.
   final _statusController = StreamController<InternetStatus>.broadcast();
