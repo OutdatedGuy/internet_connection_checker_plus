@@ -114,7 +114,7 @@ class InternetConnection {
   static const _defaultCheckInterval = Duration(seconds: 10);
 
   /// The default list of [Uri]s used for checking internet reachability.
-  final List<InternetCheckOption> _defaultCheckOptions = [
+  static final List<InternetCheckOption> _defaultCheckOptions = [
     InternetCheckOption(uri: Uri.parse('https://one.one.one.one')),
     InternetCheckOption(uri: Uri.parse('https://icanhazip.com')),
     InternetCheckOption(
