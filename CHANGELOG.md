@@ -1,3 +1,8 @@
+## 3.0.1
+
+- docs: clarify singleton instance description in InternetConnection in [4dee64a](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/4dee64a)
+- refactor: internal code improvements for better performance and immutability in [09fe9a2](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/09fe9a2), [db6f1bd](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/db6f1bd), [4e6169c](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/4e6169c)
+
 ## 3.0.0
 
 Please read the [v3 Migration Guide](MIGRATION_V3.md) for details on updating your project.
