@@ -211,6 +211,9 @@ class InternetConnection {
   /// Defaults to 2.0.
   final double _backoffMultiplier;
 
+  /// Whether the backoff state was forcefully reset by an interval change.
+  bool _backoffNeedsReset = false;
+
   /// The live backoff delay, updated each polling cycle when backoff is enabled.
   ///
   /// Resets to [_backoffInitialDelay] on reconnect or subscription cancel.
@@ -259,6 +262,7 @@ class InternetConnection {
       // caller never provided an explicit backoffInitialDelay.
       if (!_backoffInitialDelayExplicit) _backoffInitialDelay = duration;
       _currentBackoffDelay = _backoffInitialDelay;
+      _backoffNeedsReset = true;
     }
     _timerHandle?.cancel();
     _timerHandle = Timer(_checkInterval, _maybeEmitStatusUpdate);
@@ -337,9 +341,12 @@ class InternetConnection {
       if (currentStatus == InternetStatus.connected) {
         _currentBackoffDelay = _backoffInitialDelay;
         nextDelay = _checkInterval;
-      } else if (previousStatus != InternetStatus.disconnected) {
+      } else if (previousStatus != InternetStatus.disconnected || _backoffNeedsReset) {
         // First failure: previousStatus is either null (first ever poll) or
         // connected — both mean we have not yet been in a backoff streak.
+        // Also, if _backoffNeedsReset is true, we treat this as a first failure to
+        // reset the backoff delay, even if the previous status was already disconnected.
+        _backoffNeedsReset = false;
         _currentBackoffDelay = _backoffInitialDelay;
         nextDelay = _currentBackoffDelay;
       } else {
@@ -368,6 +375,7 @@ class InternetConnection {
     _timerHandle?.cancel();
     _timerHandle = null;
     _lastStatus = null;
+    _backoffNeedsReset = false;
     if (useExponentialBackoff) _currentBackoffDelay = _backoffInitialDelay;
   }
 

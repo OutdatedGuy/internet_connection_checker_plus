@@ -481,6 +481,49 @@ void main() {
         }
       });
 
+      test('setIntervalAndResetTimer syncs implicit backoffInitialDelay', () async {
+        final callLog = <DateTime>[];
+
+        // Intentionally omit `backoffInitialDelay` and rely on `checkInterval` (50ms)
+        final checker = InternetConnection.createInstance(
+          checkInterval: const Duration(milliseconds: 50),
+          useDefaultOptions: false,
+          customCheckOptions: [
+            InternetCheckOption(uri: Uri.parse('https://example.com')),
+          ],
+          useExponentialBackoff: true,
+          backoffMaxDelay: const Duration(milliseconds: 500),
+          backoffMultiplier: 2.0,
+          customConnectivityCheck: (opt) async {
+            callLog.add(DateTime.now());
+            return InternetCheckResult(option: opt, isSuccess: false);
+          },
+        );
+
+        final sub = checker.onStatusChange.listen((_) {});
+
+        // Trigger the first failure
+        await Future.delayed(const Duration(milliseconds: 100));
+        callLog.clear();
+
+        // Change the interval to 100ms
+        // Since it's an implicit initial delay, _backoffInitialDelay should also follow 100ms
+        checker.setIntervalAndResetTimer(const Duration(milliseconds: 100));
+
+        await Future.delayed(const Duration(milliseconds: 450));
+        sub.cancel();
+
+        expect(callLog.length, greaterThanOrEqualTo(2));
+        
+        if (callLog.length >= 2) {
+          final firstGap = callLog[1].difference(callLog[0]).inMilliseconds.abs();
+          
+          // If it follows, it should be around 100ms; if not, it would be around 50ms
+          // Verify that it is greater than 80ms to ensure it followed 100ms
+          expect(firstGap, greaterThan(80));
+        }
+      });
+
       test('re-subscription resets backoff state', () async {
         bool connected = false;
         final callLog = <DateTime>[];
