@@ -114,6 +114,18 @@ class InternetConnection {
         assert(
           !useExponentialBackoff || backoffMaxDelay > Duration.zero,
           'backoffMaxDelay must be greater than zero.',
+        ), 
+        assert(
+          !useExponentialBackoff ||
+              (backoffInitialDelay ?? checkInterval ?? _defaultCheckInterval) >
+                  Duration.zero,
+          'backoffInitialDelay (or checkInterval if implicitly used) must be greater than zero.',
+        ),
+        assert(
+          !useExponentialBackoff ||
+              (backoffInitialDelay ?? checkInterval ?? _defaultCheckInterval) <=
+                  backoffMaxDelay,
+          'backoffInitialDelay (or checkInterval if implicitly used) must be less than or equal to backoffMaxDelay.',
         ) {
     _internetCheckOptions = List.unmodifiable([
       if (useDefaultOptions) ..._defaultCheckOptions,
