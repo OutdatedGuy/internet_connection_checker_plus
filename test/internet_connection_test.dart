@@ -280,6 +280,70 @@ void main() {
         );
       }
 
+      group('constructor validation', () {
+        // One custom option is enough to satisfy the non-default-options assert.
+        final singleOption = [
+          InternetCheckOption(uri: Uri.parse('https://example.com')),
+        ];
+
+        // backoffMultiplier < 1.0 would cause the delay to shrink on each
+        // failure, eventually collapsing to 0 and creating a busy-poll loop.
+        test('throws when backoffMultiplier is less than 1.0', () {
+          expect(
+            () => InternetConnection.createInstance(
+              useExponentialBackoff: true,
+              useDefaultOptions: false,
+              customCheckOptions: singleOption,
+              backoffMultiplier: 0.5,
+            ),
+            throwsA(isA<AssertionError>()),
+          );
+        });
+
+        // 1.0 is the boundary: flat-rate backoff (delay never grows) is valid,
+        // since the interval still resets on reconnect as documented.
+        test('allows backoffMultiplier equal to 1.0', () {
+          expect(
+            () => InternetConnection.createInstance(
+              useExponentialBackoff: true,
+              useDefaultOptions: false,
+              customCheckOptions: singleOption,
+              backoffMultiplier: 1.0,
+            ),
+            returnsNormally,
+          );
+        });
+
+        // Duration.zero initial delay fires the next timer immediately on the
+        // first failure, indistinguishable from having no backoff at all.
+        test('throws when backoffInitialDelay is zero', () {
+          expect(
+            () => InternetConnection.createInstance(
+              useExponentialBackoff: true,
+              useDefaultOptions: false,
+              customCheckOptions: singleOption,
+              backoffInitialDelay: Duration.zero,
+            ),
+            throwsA(isA<AssertionError>()),
+          );
+        });
+
+        // initialDelay > maxDelay means the very first backed-off poll already
+        // exceeds the configured ceiling — the ceiling becomes meaningless.
+        test('throws when backoffInitialDelay exceeds backoffMaxDelay', () {
+          expect(
+            () => InternetConnection.createInstance(
+              useExponentialBackoff: true,
+              useDefaultOptions: false,
+              customCheckOptions: singleOption,
+              backoffInitialDelay: const Duration(seconds: 10),
+              backoffMaxDelay: const Duration(seconds: 5),
+            ),
+            throwsA(isA<AssertionError>()),
+          );
+        });
+      });
+
       test('disabled by default: interval stays constant under failures',
           () async {
         await TestHttpClient.run((client) async {
