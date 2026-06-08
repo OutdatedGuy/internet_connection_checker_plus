@@ -346,26 +346,35 @@ void main() {
 
       test('disabled by default: interval stays constant under failures',
           () async {
-        await TestHttpClient.run((client) async {
-          client.responseBuilder = (_) =>
-              TestHttpClient.createResponse(statusCode: 500);
+        final callLog = <DateTime>[];
 
-          final sub = InternetConnection.createInstance(
-            checkInterval: const Duration(milliseconds: 100),
-            useDefaultOptions: false,
-            customCheckOptions: [
-              InternetCheckOption(uri: Uri.parse('https://www.example.com')),
-            ],
-          ).onStatusChange.listen((_) {});
+        final checker = InternetConnection.createInstance(
+          checkInterval: const Duration(milliseconds: 100),
+          useDefaultOptions: false,
+          customCheckOptions: [
+            InternetCheckOption(uri: Uri.parse('https://www.example.com')),
+          ],
+          customConnectivityCheck: (opt) async {
+            callLog.add(DateTime.now());
+            return InternetCheckResult(option: opt, isSuccess: false);
+          },
+        );
 
-          await Future.delayed(const Duration(milliseconds: 500));
+        final sub = checker.onStatusChange.listen((_) {});
+        await Future.delayed(const Duration(milliseconds: 550));
+        sub.cancel();
 
-          // Count calls by measuring the subscription timer indirectly:
-          // with a 100ms interval over 500ms we expect ~4-6 checks total.
-          // We only verify the subscription fires at least once (disconnected).
-          expect(sub, isNotNull);
-          sub.cancel();
-        });
+        // With a 100ms interval over 550ms we expect ~4-5 checks.
+        expect(callLog.length, greaterThanOrEqualTo(4));
+
+        // All gaps should stay near 100ms — no backoff growth.
+        for (int i = 1; i < callLog.length; i++) {
+          final gap =
+              callLog[i].difference(callLog[i - 1]).inMilliseconds.abs();
+          expect(gap, lessThan(200),
+              reason: 'gap between check $i and ${i - 1} was ${gap}ms '
+                  '— expected ~100ms (constant interval, no backoff)');
+        }
       });
 
       test('first failure sets initialDelay', () async {
