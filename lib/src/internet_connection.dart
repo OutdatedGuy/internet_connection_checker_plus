@@ -359,7 +359,9 @@ class InternetConnection {
         // Also, if _backoffNeedsReset is true, we treat this as a first failure to
         // reset the backoff delay, even if the previous status was already disconnected.
         _backoffNeedsReset = false;
-        _currentBackoffDelay = _backoffInitialDelay;
+        _currentBackoffDelay = _backoffInitialDelay > _backoffMaxDelay
+            ? _backoffMaxDelay
+            : _backoffInitialDelay;
         nextDelay = _currentBackoffDelay;
       } else {
         // Ongoing failure: grow the delay.
