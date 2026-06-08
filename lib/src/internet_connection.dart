@@ -108,8 +108,8 @@ class InternetConnection {
           'default ones.',
         ),
         assert(
-          !useExponentialBackoff || backoffMultiplier > 0,
-          'backoffMultiplier must be positive.',
+          !useExponentialBackoff || backoffMultiplier >= 1.0,
+          'backoffMultiplier must be greater than or equal to 1.0 to prevent shrinking intervals.',
         ),
         assert(
           !useExponentialBackoff || backoffMaxDelay > Duration.zero,
