@@ -377,6 +377,7 @@ class InternetConnection {
       nextDelay = _checkInterval;
     }
 
+    if (!_statusController.hasListener) return;
     _timerHandle = Timer(nextDelay, _maybeEmitStatusUpdate);
   }
 
