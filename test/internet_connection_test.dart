@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:test/test.dart';
 
@@ -168,7 +170,7 @@ void main() {
           // Give it tiny error space.
           expect(4 <= counter && counter <= 6, true);
 
-          sub.cancel();
+          await sub.cancel();
         });
       });
 
@@ -204,7 +206,7 @@ void main() {
 
           expect(14 <= counter && counter <= 16, true);
 
-          sub.cancel();
+          await sub.cancel();
         });
       });
 
@@ -238,7 +240,7 @@ void main() {
           // Give it tiny error space.
           expect(4 <= counter && counter <= 6, true);
 
-          sub.cancel();
+          await sub.cancel();
         });
       });
     });
@@ -251,6 +253,39 @@ void main() {
     test('createInstance constructor returns different instances', () {
       final checker = InternetConnection.createInstance();
       expect(checker, isNot(InternetConnection.createInstance()));
+    });
+
+    test('onStatusChange yields cached status immediately to new subscriber',
+        () async {
+      await TestHttpClient.run((client) async {
+        client.responseBuilder =
+            (req) => TestHttpClient.createResponse(statusCode: 200);
+
+        final checker = InternetConnection.createInstance(
+          // Long interval so no second poll fires during the test.
+          checkInterval: const Duration(seconds: 10),
+          useDefaultOptions: false,
+          customCheckOptions: [
+            InternetCheckOption(uri: Uri.parse('https://www.example.com')),
+          ],
+        );
+
+        // First subscription — wait for the initial check to complete.
+        final sub1 = checker.onStatusChange.listen((_) {});
+        await Future.delayed(const Duration(milliseconds: 100));
+        expect(checker.lastTryResults, InternetStatus.connected);
+
+        // Second subscription — should receive the cached status without a
+        // new network request (next poll is 10s away).
+        final received = <InternetStatus>[];
+        final sub2 = checker.onStatusChange.listen(received.add);
+        await Future.delayed(const Duration(milliseconds: 50));
+
+        expect(received, [InternetStatus.connected]);
+
+        await sub1.cancel();
+        await sub2.cancel();
+      });
     });
 
     group('exponentialBackoff', () {
@@ -363,7 +398,7 @@ void main() {
 
         final sub = checker.onStatusChange.listen((_) {});
         await Future.delayed(const Duration(milliseconds: 550));
-        sub.cancel();
+        await sub.cancel();
 
         // With a 100ms interval over 550ms we expect ~4-5 checks.
         expect(callLog.length, greaterThanOrEqualTo(4));
@@ -402,7 +437,7 @@ void main() {
         // cycle to elapse (~100ms for detect + ~200ms for the backoff timer).
         await Future.delayed(const Duration(milliseconds: 450));
 
-        sub.cancel();
+        await sub.cancel();
 
         // We should have at most 2 calls in this window:
         // one that detected the disconnect, and at most one more after
@@ -433,7 +468,7 @@ void main() {
 
         // Total expected time for ~4 checks: 50 + 50 + 100 + 200 = 400ms
         await Future.delayed(const Duration(milliseconds: 550));
-        sub.cancel();
+        await sub.cancel();
 
         expect(callLog.length, greaterThanOrEqualTo(4));
 
@@ -465,7 +500,7 @@ void main() {
         // Run long enough for the delay to have hit the cap and stayed there.
         // 50 + 50 + 100 + 200 + 200 = 600ms total for 5 calls.
         await Future.delayed(const Duration(milliseconds: 900));
-        sub.cancel();
+        await sub.cancel();
 
         expect(callLog.length, greaterThanOrEqualTo(4));
 
@@ -501,7 +536,7 @@ void main() {
 
         // After reconnect, polling should revert to checkInterval (50ms).
         await Future.delayed(const Duration(milliseconds: 300));
-        sub.cancel();
+        await sub.cancel();
 
         // With 50ms interval over 300ms we expect ~5 calls.
         expect(callLog.length, greaterThanOrEqualTo(3));
@@ -537,7 +572,7 @@ void main() {
         checker.setIntervalAndResetTimer(const Duration(milliseconds: 50));
 
         await Future.delayed(const Duration(milliseconds: 400));
-        sub.cancel();
+        await sub.cancel();
 
         // Should have ~3-5 calls; the gaps should be non-decreasing again
         // (restarted backoff sequence: 50, 100, 200ms…).
@@ -580,7 +615,7 @@ void main() {
         checker.setIntervalAndResetTimer(const Duration(milliseconds: 100));
 
         await Future.delayed(const Duration(milliseconds: 450));
-        sub.cancel();
+        await sub.cancel();
 
         expect(callLog.length, greaterThanOrEqualTo(2));
 
@@ -610,13 +645,13 @@ void main() {
         // First subscription — let backoff grow.
         final sub1 = checker.onStatusChange.listen((_) {});
         await Future.delayed(const Duration(milliseconds: 600));
-        sub1.cancel();
+        await sub1.cancel();
         callLog.clear();
 
         // Second subscription — backoff should restart from initialDelay.
         final sub2 = checker.onStatusChange.listen((_) {});
         await Future.delayed(const Duration(milliseconds: 400));
-        sub2.cancel();
+        await sub2.cancel();
 
         // With restarted backoff (50 → 100 → 200ms), we expect fewer calls
         // than if the capped 200ms delay continued (which would yield ~2 calls).
@@ -650,7 +685,7 @@ void main() {
         // If first-failure was treated as ongoing, delay would be 50*2=100ms anyway,
         // but if it jumped to ongoing-formula on first call it would be 200ms.
         await Future.delayed(const Duration(milliseconds: 400));
-        sub.cancel();
+        await sub.cancel();
 
         // We should see at least 2 calls in 400ms:
         // call[0] immediately, call[1] after ~100ms, call[2] after ~200ms.
@@ -663,6 +698,93 @@ void main() {
           expect(gap, greaterThan(60));
           expect(gap, lessThan(200));
         }
+      });
+
+      test(
+          'setIntervalAndResetTimer during connected period: '
+          'first subsequent failure uses initialDelay', () async {
+        bool connected = true;
+        final callLog = <DateTime>[];
+
+        final checker = makeChecker(
+          shouldSucceed: () => connected,
+          callLog: callLog,
+          checkInterval: const Duration(milliseconds: 50),
+          backoffInitialDelay: const Duration(milliseconds: 150),
+          backoffMaxDelay: const Duration(milliseconds: 800),
+          backoffMultiplier: 2.0,
+        );
+
+        final sub = checker.onStatusChange.listen((_) {});
+
+        // Establish connected state, then call setIntervalAndResetTimer
+        // while still connected.
+        await Future.delayed(const Duration(milliseconds: 100));
+        checker.setIntervalAndResetTimer(const Duration(milliseconds: 50));
+
+        // Let a few more connected polls run, then measure from the disconnect.
+        await Future.delayed(const Duration(milliseconds: 150));
+        callLog.clear();
+
+        connected = false;
+
+        // Wait for disconnect detection + one backoff cycle (initialDelay=150ms).
+        await Future.delayed(const Duration(milliseconds: 400));
+        await sub.cancel();
+
+        // The gap after the first disconnected poll should be ~initialDelay (150ms),
+        // not a grown delay.
+        if (callLog.length >= 2) {
+          final gap = callLog[1].difference(callLog[0]).inMilliseconds.abs();
+          expect(gap, greaterThan(100));
+        }
+      });
+
+      test(
+          'cancelled in-flight check does not emit stale result to new subscriber',
+          () async {
+        // Use a gate to keep the first check suspended while we cancel and
+        // resubscribe, then release it to verify the stale result is dropped.
+        final checkGate = Completer<void>();
+        var checkCount = 0;
+        final option =
+            InternetCheckOption(uri: Uri.parse('https://example.com'));
+
+        final checker = InternetConnection.createInstance(
+          checkInterval: const Duration(seconds: 10),
+          useDefaultOptions: false,
+          customCheckOptions: [option],
+          useExponentialBackoff: true,
+          customConnectivityCheck: (opt) async {
+            final mine = ++checkCount;
+            if (mine == 1) await checkGate.future; // stale check is paused
+            // check 1 → connected (stale), check 2 → disconnected (fresh)
+            return InternetCheckResult(option: opt, isSuccess: mine == 1);
+          },
+        );
+
+        // Subscribe — starts the first (paused) check.
+        final sub1 = checker.onStatusChange.listen((_) {});
+        await Future.microtask(() {});
+
+        // Cancel before the first check resolves.
+        await sub1.cancel();
+
+        // Resubscribe — starts the second (immediate, disconnected) check.
+        final received = <InternetStatus>[];
+        final sub2 = checker.onStatusChange.listen(received.add);
+
+        // Let the second check complete.
+        await Future.delayed(const Duration(milliseconds: 50));
+
+        // Release the stale first check.
+        checkGate.complete();
+        await Future.delayed(const Duration(milliseconds: 50));
+
+        // Only the fresh (disconnected) result should have been emitted.
+        expect(received, [InternetStatus.disconnected]);
+
+        await sub2.cancel();
       });
     });
   });

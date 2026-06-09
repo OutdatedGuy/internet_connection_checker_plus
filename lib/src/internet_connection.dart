@@ -59,7 +59,7 @@ typedef ConnectivityCheckCallback = Future<InternetCheckResult> Function(
 /// will prevent memory leaks and free up resources.
 ///
 /// ```dart
-/// listener.cancel();
+/// await listener.cancel();
 /// ```
 class InternetConnection {
   /// Returns the singleton instance of [InternetConnection].
@@ -262,6 +262,17 @@ class InternetConnection {
   /// is stale — another caller already rescheduled and owns the next cycle.
   int _generation = 0;
 
+  /// Monotonically increasing counter bumped only on [_handleStatusChangeCancel].
+  ///
+  /// Captured before the [await internetStatus] gap and compared before
+  /// emitting.  A mismatch means a cancel+resubscribe cycle happened while
+  /// the check was in-flight: the result belongs to the old subscription context
+  /// and must not be emitted to the new subscriber.
+  ///
+  /// Unlike [_generation], this is NOT bumped by [setIntervalAndResetTimer],
+  /// because interval changes do not affect which subscriber owns the result.
+  int _cancelGeneration = 0;
+
   /// Checks if the [Uri] specified in [option] is reachable.
   ///
   /// Returns a [Future] that completes with an [InternetCheckResult] indicating
@@ -361,6 +372,7 @@ class InternetConnection {
   Future<void> _maybeEmitStatusUpdate() async {
     _timerHandle?.cancel();
     final generation = _generation;
+    final cancelGeneration = _cancelGeneration;
 
     if (!_statusController.hasListener) return;
 
@@ -370,7 +382,12 @@ class InternetConnection {
 
     final currentStatus = await internetStatus;
 
-    if (_lastStatus != currentStatus && _statusController.hasListener) {
+    // Only emit if this result still belongs to the current subscription
+    // context.  A cancel+resubscribe while we were awaiting bumps
+    // _cancelGeneration; the new subscriber owns its own fresh check.
+    if (_cancelGeneration == cancelGeneration &&
+        _lastStatus != currentStatus &&
+        _statusController.hasListener) {
       _lastStatus = currentStatus;
       _statusController.add(currentStatus);
     }
@@ -419,8 +436,12 @@ class InternetConnection {
   ///
   /// Cancels the timer and resets the last status.
   void _handleStatusChangeCancel() {
+    // Not awaited: _handleStatusChangeCancel is a synchronous onCancel
+    // callback.  Any event that fires before cancel propagates will see
+    // hasListener == false and return early from _maybeEmitStatusUpdate.
     _triggerSubscription?.cancel();
     _triggerSubscription = null;
+    _cancelGeneration++;
     _generation++;
     _timerHandle?.cancel();
     _timerHandle = null;
