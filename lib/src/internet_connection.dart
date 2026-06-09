@@ -246,6 +246,16 @@ class InternetConnection {
   /// The handle for the timer used for periodic status checks.
   Timer? _timerHandle;
 
+  /// Monotonically increasing counter bumped whenever an in-flight
+  /// [_maybeEmitStatusUpdate] must be invalidated: on [setIntervalAndResetTimer]
+  /// and on [_handleStatusChangeCancel].
+  ///
+  /// Each [_maybeEmitStatusUpdate] invocation captures this value on entry.
+  /// Before mutating shared backoff state or scheduling the next timer it
+  /// checks that the value has not changed.  A mismatch means this invocation
+  /// is stale — another caller already rescheduled and owns the next cycle.
+  int _generation = 0;
+
   /// Checks if the [Uri] specified in [option] is reachable.
   ///
   /// Returns a [Future] that completes with an [InternetCheckResult] indicating
@@ -285,6 +295,7 @@ class InternetConnection {
       _currentBackoffDelay = _backoffInitialDelay;
       _backoffNeedsReset = true;
     }
+    _generation++;
     _timerHandle?.cancel();
     _timerHandle = Timer(_checkInterval, _maybeEmitStatusUpdate);
   }
@@ -343,6 +354,7 @@ class InternetConnection {
   /// Updates the status and emits it if there are listeners.
   Future<void> _maybeEmitStatusUpdate() async {
     _timerHandle?.cancel();
+    final generation = _generation;
 
     if (!_statusController.hasListener) return;
 
@@ -356,6 +368,14 @@ class InternetConnection {
       _lastStatus = currentStatus;
       _statusController.add(currentStatus);
     }
+
+    if (!_statusController.hasListener) return;
+    // Guard before mutating shared backoff state: a setIntervalAndResetTimer
+    // call that arrived while we were awaiting internetStatus has already
+    // bumped _generation and scheduled its own timer.  Mutating
+    // _currentBackoffDelay / _backoffNeedsReset here would silently overwrite
+    // the reset that setIntervalAndResetTimer applied.
+    if (_generation != generation) return;
 
     Duration nextDelay;
     if (useExponentialBackoff) {
@@ -386,7 +406,6 @@ class InternetConnection {
       nextDelay = _checkInterval;
     }
 
-    if (!_statusController.hasListener) return;
     _timerHandle = Timer(nextDelay, _maybeEmitStatusUpdate);
   }
 
@@ -396,6 +415,7 @@ class InternetConnection {
   void _handleStatusChangeCancel() {
     _triggerSubscription?.cancel();
     _triggerSubscription = null;
+    _generation++;
     _timerHandle?.cancel();
     _timerHandle = null;
     _lastStatus = null;
