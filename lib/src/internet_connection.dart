@@ -97,11 +97,11 @@ class InternetConnection {
   })  : _checkInterval = checkInterval ?? _defaultCheckInterval,
         _backoffInitialDelayExplicit = backoffInitialDelay != null,
         _backoffInitialDelay =
-            backoffInitialDelay ?? checkInterval ?? _defaultCheckInterval,
+            _resolveInitialDelay(backoffInitialDelay, checkInterval),
         _backoffMaxDelay = backoffMaxDelay,
         _backoffMultiplier = backoffMultiplier,
         _currentBackoffDelay =
-            backoffInitialDelay ?? checkInterval ?? _defaultCheckInterval,
+            _resolveInitialDelay(backoffInitialDelay, checkInterval),
         assert(
           useDefaultOptions || customCheckOptions?.isNotEmpty == true,
           'You must provide a list of options if you are not using the '
@@ -124,7 +124,7 @@ class InternetConnection {
       }
       if (_backoffInitialDelay <= Duration.zero) {
         throw ArgumentError.value(
-          backoffInitialDelay,
+          _backoffInitialDelay,
           'backoffInitialDelay',
           'backoffInitialDelay (or checkInterval if implicitly used) must be greater than zero.',
         );
@@ -150,6 +150,12 @@ class InternetConnection {
 
   /// The default check interval duration.
   static const _defaultCheckInterval = Duration(seconds: 10);
+
+  static Duration _resolveInitialDelay(
+    Duration? backoffInitialDelay,
+    Duration? checkInterval,
+  ) =>
+      backoffInitialDelay ?? checkInterval ?? _defaultCheckInterval;
 
   /// The default list of [Uri]s used for checking internet reachability.
   static final _defaultCheckOptions = List<InternetCheckOption>.unmodifiable([
