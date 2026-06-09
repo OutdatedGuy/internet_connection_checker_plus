@@ -264,7 +264,8 @@ void main() {
         Duration backoffMaxDelay = const Duration(milliseconds: 800),
         double backoffMultiplier = 2.0,
       }) {
-        final option = InternetCheckOption(uri: Uri.parse('https://example.com'));
+        final option =
+            InternetCheckOption(uri: Uri.parse('https://example.com'));
         return InternetConnection.createInstance(
           checkInterval: checkInterval,
           useDefaultOptions: false,
@@ -411,10 +412,7 @@ void main() {
         // The gap between the disconnect-detecting call and the next call
         // should be around initialDelay (200ms), not checkInterval (100ms).
         if (callLog.length >= 2) {
-          final gap = callLog[1]
-              .difference(callLog[0])
-              .inMilliseconds
-              .abs();
+          final gap = callLog[1].difference(callLog[0]).inMilliseconds.abs();
           expect(gap, greaterThan(150));
         }
       });
@@ -442,8 +440,7 @@ void main() {
         // Verify that gaps between consecutive calls are non-decreasing.
         final gaps = <int>[];
         for (int i = 1; i < callLog.length; i++) {
-          gaps.add(
-              callLog[i].difference(callLog[i - 1]).inMilliseconds.abs());
+          gaps.add(callLog[i].difference(callLog[i - 1]).inMilliseconds.abs());
         }
         for (int i = 1; i < gaps.length; i++) {
           // Each gap should be >= the previous one (allowing 20ms tolerance).
@@ -546,15 +543,14 @@ void main() {
         // (restarted backoff sequence: 50, 100, 200ms…).
         expect(callLog.length, greaterThanOrEqualTo(2));
         if (callLog.length >= 3) {
-          final gap1 =
-              callLog[1].difference(callLog[0]).inMilliseconds.abs();
-          final gap2 =
-              callLog[2].difference(callLog[1]).inMilliseconds.abs();
+          final gap1 = callLog[1].difference(callLog[0]).inMilliseconds.abs();
+          final gap2 = callLog[2].difference(callLog[1]).inMilliseconds.abs();
           expect(gap2 + 20, greaterThanOrEqualTo(gap1));
         }
       });
 
-      test('setIntervalAndResetTimer syncs implicit backoffInitialDelay', () async {
+      test('setIntervalAndResetTimer syncs implicit backoffInitialDelay',
+          () async {
         final callLog = <DateTime>[];
 
         // Intentionally omit `backoffInitialDelay` and rely on `checkInterval` (50ms)
@@ -587,10 +583,11 @@ void main() {
         sub.cancel();
 
         expect(callLog.length, greaterThanOrEqualTo(2));
-        
+
         if (callLog.length >= 2) {
-          final firstGap = callLog[1].difference(callLog[0]).inMilliseconds.abs();
-          
+          final firstGap =
+              callLog[1].difference(callLog[0]).inMilliseconds.abs();
+
           // If it follows, it should be around 100ms; if not, it would be around 50ms
           // Verify that it is greater than 80ms to ensure it followed 100ms
           expect(firstGap, greaterThan(80));
@@ -660,10 +657,7 @@ void main() {
         expect(callLog.length, greaterThanOrEqualTo(2));
 
         if (callLog.length >= 2) {
-          final gap = callLog[1]
-              .difference(callLog[0])
-              .inMilliseconds
-              .abs();
+          final gap = callLog[1].difference(callLog[0]).inMilliseconds.abs();
           // initialDelay is 100ms; ongoing backoff of 100ms would also be 100ms
           // on first step, but 200ms on second. We verify the first gap is ~100ms.
           expect(gap, greaterThan(60));

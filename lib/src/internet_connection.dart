@@ -114,7 +114,7 @@ class InternetConnection {
         assert(
           !useExponentialBackoff || backoffMaxDelay > Duration.zero,
           'backoffMaxDelay must be greater than zero.',
-        ), 
+        ),
         assert(
           !useExponentialBackoff ||
               (backoffInitialDelay ?? checkInterval ?? _defaultCheckInterval) >
@@ -353,7 +353,8 @@ class InternetConnection {
       if (currentStatus == InternetStatus.connected) {
         _currentBackoffDelay = _backoffInitialDelay;
         nextDelay = _checkInterval;
-      } else if (previousStatus != InternetStatus.disconnected || _backoffNeedsReset) {
+      } else if (previousStatus != InternetStatus.disconnected ||
+          _backoffNeedsReset) {
         // First failure: previousStatus is either null (first ever poll) or
         // connected — both mean we have not yet been in a backoff streak.
         // Also, if _backoffNeedsReset is true, we treat this as a first failure to
@@ -368,8 +369,7 @@ class InternetConnection {
         final ms =
             (_currentBackoffDelay.inMilliseconds * _backoffMultiplier).round();
         _currentBackoffDelay = Duration(
-          milliseconds:
-              ms.clamp(0, _backoffMaxDelay.inMilliseconds).toInt(),
+          milliseconds: ms.clamp(0, _backoffMaxDelay.inMilliseconds).toInt(),
         );
         nextDelay = _currentBackoffDelay;
       }
