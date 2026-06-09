@@ -106,27 +106,36 @@ class InternetConnection {
           useDefaultOptions || customCheckOptions?.isNotEmpty == true,
           'You must provide a list of options if you are not using the '
           'default ones.',
-        ),
-        assert(
-          !useExponentialBackoff || backoffMultiplier >= 1.0,
-          'backoffMultiplier must be greater than or equal to 1.0 to prevent shrinking intervals.',
-        ),
-        assert(
-          !useExponentialBackoff || backoffMaxDelay > Duration.zero,
-          'backoffMaxDelay must be greater than zero.',
-        ),
-        assert(
-          !useExponentialBackoff ||
-              (backoffInitialDelay ?? checkInterval ?? _defaultCheckInterval) >
-                  Duration.zero,
-          'backoffInitialDelay (or checkInterval if implicitly used) must be greater than zero.',
-        ),
-        assert(
-          !useExponentialBackoff ||
-              (backoffInitialDelay ?? checkInterval ?? _defaultCheckInterval) <=
-                  backoffMaxDelay,
-          'backoffInitialDelay (or checkInterval if implicitly used) must be less than or equal to backoffMaxDelay.',
         ) {
+    if (useExponentialBackoff) {
+      if (backoffMultiplier < 1.0) {
+        throw ArgumentError.value(
+          backoffMultiplier,
+          'backoffMultiplier',
+          'Must be >= 1.0 to prevent shrinking intervals.',
+        );
+      }
+      if (backoffMaxDelay <= Duration.zero) {
+        throw ArgumentError.value(
+          backoffMaxDelay,
+          'backoffMaxDelay',
+          'Must be greater than zero.',
+        );
+      }
+      if (_backoffInitialDelay <= Duration.zero) {
+        throw ArgumentError.value(
+          backoffInitialDelay,
+          'backoffInitialDelay',
+          'backoffInitialDelay (or checkInterval if implicitly used) must be greater than zero.',
+        );
+      }
+      if (_backoffInitialDelay > _backoffMaxDelay) {
+        throw ArgumentError(
+          'backoffInitialDelay (or checkInterval if implicitly used) '
+          'must be less than or equal to backoffMaxDelay.',
+        );
+      }
+    }
     _internetCheckOptions = List.unmodifiable([
       if (useDefaultOptions) ..._defaultCheckOptions,
       if (customCheckOptions != null) ...customCheckOptions,

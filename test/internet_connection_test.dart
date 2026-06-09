@@ -297,7 +297,7 @@ void main() {
               customCheckOptions: singleOption,
               backoffMultiplier: 0.5,
             ),
-            throwsA(isA<AssertionError>()),
+            throwsA(isA<ArgumentError>()),
           );
         });
 
@@ -325,7 +325,7 @@ void main() {
               customCheckOptions: singleOption,
               backoffInitialDelay: Duration.zero,
             ),
-            throwsA(isA<AssertionError>()),
+            throwsA(isA<ArgumentError>()),
           );
         });
 
@@ -340,7 +340,7 @@ void main() {
               backoffInitialDelay: const Duration(seconds: 10),
               backoffMaxDelay: const Duration(seconds: 5),
             ),
-            throwsA(isA<AssertionError>()),
+            throwsA(isA<ArgumentError>()),
           );
         });
       });
