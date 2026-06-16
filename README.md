@@ -246,6 +246,26 @@ class _MyWidgetState extends State<MyWidget> {
 }
 ```
 
+## For Third-Party Package Developers
+
+If you are building a package, plugin, or library that depends on `internet_connection_checker_plus`, **do not use the singleton instance** (`InternetConnection()`).
+
+If your package alters the singleton's configuration or accidentally calls `dispose()` on it, you will introduce side effects that break the host application using your package. Instead, always instantiate a dedicated checker using `createInstance()` and manage its lifecycle entirely within your package.
+
+```dart
+class MyCustomPackageService {
+  final InternetConnection _connectionChecker;
+
+  // Use createInstance() to isolate your connection checker from the host app
+  MyCustomPackageService() : _connectionChecker = InternetConnection.createInstance();
+
+  // Safely clean up only your isolated instance
+  Future<void> shutdown() async {
+    await _connectionChecker.dispose();
+  }
+}
+```
+
 ## Default Endpoints
 
 The following endpoints are checked by default _(carefully selected for speed
