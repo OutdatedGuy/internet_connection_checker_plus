@@ -12,12 +12,13 @@ class CustomSuccessCriteria extends StatefulWidget {
 
 class _CustomSuccessCriteriaState extends State<CustomSuccessCriteria> {
   InternetStatus? _connectionStatus;
+  late InternetConnection _internetConnection;
   late StreamSubscription<InternetStatus> _subscription;
 
   @override
   void initState() {
     super.initState();
-    _subscription = InternetConnection.createInstance(
+    _internetConnection = InternetConnection.createInstance(
       customCheckOptions: [
         InternetCheckOption(
           uri: Uri.parse('https://img.shields.io/pub/'),
@@ -27,7 +28,8 @@ class _CustomSuccessCriteriaState extends State<CustomSuccessCriteria> {
         ),
       ],
       useDefaultOptions: false,
-    ).onStatusChange.listen((status) {
+    );
+    _subscription = _internetConnection.onStatusChange.listen((status) {
       setState(() {
         _connectionStatus = status;
       });
@@ -37,6 +39,7 @@ class _CustomSuccessCriteriaState extends State<CustomSuccessCriteria> {
   @override
   void dispose() {
     _subscription.cancel();
+    _internetConnection.dispose();
     super.dispose();
   }
 

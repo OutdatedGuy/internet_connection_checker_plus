@@ -12,12 +12,13 @@ class CustomURIs extends StatefulWidget {
 
 class _CustomURIsState extends State<CustomURIs> {
   InternetStatus? _connectionStatus;
+  late InternetConnection _internetConnection;
   late StreamSubscription<InternetStatus> _subscription;
 
   @override
   void initState() {
     super.initState();
-    _subscription = InternetConnection.createInstance(
+    _internetConnection = InternetConnection.createInstance(
       customCheckOptions: [
         InternetCheckOption(
           uri: Uri.parse('https://cloudflare.com/cdn-cgi/trace'),
@@ -41,7 +42,8 @@ class _CustomURIsState extends State<CustomURIs> {
         InternetCheckOption(uri: Uri.parse('https://lenta.ru')),
       ],
       useDefaultOptions: false,
-    ).onStatusChange.listen((status) {
+    );
+    _subscription = _internetConnection.onStatusChange.listen((status) {
       setState(() {
         _connectionStatus = status;
       });
@@ -51,6 +53,7 @@ class _CustomURIsState extends State<CustomURIs> {
   @override
   void dispose() {
     _subscription.cancel();
+    _internetConnection.dispose();
     super.dispose();
   }
 
