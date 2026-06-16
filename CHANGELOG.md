@@ -1,3 +1,8 @@
+## 3.1.0
+
+- feat: dispose method to free up resources in [b246b22](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/b246b22)
+- docs: added notice for 3rd party package developers in [8e95e0b](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/8e95e0b)
+
 ## 3.0.1
 
 - docs: clarify singleton instance description in InternetConnection in [4dee64a](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/4dee64a)
