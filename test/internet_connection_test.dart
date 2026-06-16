@@ -21,6 +21,8 @@ void main() {
           useDefaultOptions: false,
         );
         expect(await checker.hasInternetAccess, false);
+
+        await checker.dispose();
       });
 
       test('invokes responseStatusFn to determine success', () async {
@@ -36,6 +38,8 @@ void main() {
         );
 
         expect(await checker.hasInternetAccess, expectedStatus);
+
+        await checker.dispose();
       });
 
       test('sends custom headers on request', () async {
@@ -64,6 +68,8 @@ void main() {
           );
 
           expect(await checker.hasInternetAccess, expectedStatus);
+
+          await checker.dispose();
         });
       });
 
@@ -84,6 +90,8 @@ void main() {
           // This inherently tests that a default client was created and used
           // Successfully checking internet access means the internal client works
           expect(checker.hasInternetAccess, isA<Future<bool>>());
+
+          await checker.dispose();
         },
       );
 
@@ -111,6 +119,8 @@ void main() {
         final result = await checker.hasInternetAccess;
         expect(reachabilityCheckerCalled, true);
         expect(result, true);
+
+        await checker.dispose();
       });
     });
 
@@ -128,6 +138,8 @@ void main() {
           useDefaultOptions: false,
         );
         expect(await checker.hasInternetAccess, true);
+
+        await checker.dispose();
       });
 
       test('returns false when any URI is unreachable', () async {
@@ -140,6 +152,8 @@ void main() {
           ],
         );
         expect(await checker.hasInternetAccess, false);
+
+        await checker.dispose();
       });
     });
 
@@ -152,8 +166,7 @@ void main() {
             counter++;
             return TestHttpClient.createResponse(statusCode: 200);
           };
-
-          final sub = InternetConnection.createInstance(
+          final checker = InternetConnection.createInstance(
             checkInterval: const Duration(milliseconds: 100),
             useDefaultOptions: false,
             customCheckOptions: [
@@ -161,7 +174,8 @@ void main() {
                 uri: Uri.parse('https://www.example.com'),
               ),
             ],
-          ).onStatusChange.listen((_) {});
+          );
+          final sub = checker.onStatusChange.listen((_) {});
 
           await Future.delayed(const Duration(milliseconds: 500));
 
@@ -169,6 +183,7 @@ void main() {
           expect(4 <= counter && counter <= 6, true);
 
           sub.cancel();
+          await checker.dispose();
         });
       });
 
@@ -181,7 +196,7 @@ void main() {
             return TestHttpClient.createResponse(statusCode: 200);
           };
 
-          final instance = InternetConnection.createInstance(
+          final checker = InternetConnection.createInstance(
             checkInterval: const Duration(milliseconds: 100),
             useDefaultOptions: false,
             customCheckOptions: [
@@ -191,20 +206,21 @@ void main() {
             ],
           );
 
-          final sub = instance.onStatusChange.listen((_) {});
+          final sub = checker.onStatusChange.listen((_) {});
 
           await Future.delayed(const Duration(milliseconds: 500));
 
           // Give it tiny error space.
           expect(4 <= counter && counter <= 6, true);
 
-          instance.setIntervalAndResetTimer(const Duration(milliseconds: 50));
+          checker.setIntervalAndResetTimer(const Duration(milliseconds: 50));
 
           await Future.delayed(const Duration(milliseconds: 500));
 
           expect(14 <= counter && counter <= 16, true);
 
           sub.cancel();
+          await checker.dispose();
         });
       });
 
@@ -217,7 +233,7 @@ void main() {
             return TestHttpClient.createResponse(statusCode: 200);
           };
 
-          final instance = InternetConnection.createInstance(
+          final checker = InternetConnection.createInstance(
             checkInterval: const Duration(milliseconds: 100),
             useDefaultOptions: false,
             customCheckOptions: [
@@ -227,10 +243,10 @@ void main() {
             ],
           );
 
-          final sub = instance.onStatusChange.listen((_) {
+          final sub = checker.onStatusChange.listen((_) {
             // Setting the same interval upon each emit should not
             // result in any extra triggers.
-            instance.setIntervalAndResetTimer(instance.checkInterval);
+            checker.setIntervalAndResetTimer(checker.checkInterval);
           });
 
           await Future.delayed(const Duration(milliseconds: 500));
@@ -239,6 +255,7 @@ void main() {
           expect(4 <= counter && counter <= 6, true);
 
           sub.cancel();
+          await checker.dispose();
         });
       });
     });
@@ -248,9 +265,11 @@ void main() {
       expect(checker, InternetConnection());
     });
 
-    test('createInstance constructor returns different instances', () {
+    test('createInstance constructor returns different instances', () async {
       final checker = InternetConnection.createInstance();
       expect(checker, isNot(InternetConnection.createInstance()));
+
+      await checker.dispose();
     });
   });
 }

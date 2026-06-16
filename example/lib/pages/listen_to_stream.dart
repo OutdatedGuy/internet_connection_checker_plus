@@ -13,14 +13,16 @@ class ListenToStream extends StatefulWidget {
 
 class _ListenToStreamState extends State<ListenToStream> {
   InternetStatus? _connectionStatus;
+  late InternetConnection _internetConnection;
   late StreamSubscription<InternetStatus> _subscription;
 
   @override
   void initState() {
     super.initState();
-    _subscription = InternetConnection.createInstance(
+    _internetConnection = InternetConnection.createInstance(
       triggerStream: Connectivity().onConnectivityChanged,
-    ).onStatusChange.listen((status) {
+    );
+    _subscription = _internetConnection.onStatusChange.listen((status) {
       setState(() {
         _connectionStatus = status;
       });
@@ -30,6 +32,7 @@ class _ListenToStreamState extends State<ListenToStream> {
   @override
   void dispose() {
     _subscription.cancel();
+    _internetConnection.dispose();
     super.dispose();
   }
 

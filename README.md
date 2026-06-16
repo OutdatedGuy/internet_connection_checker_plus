@@ -133,6 +133,23 @@ final connection = InternetConnection.createInstance(
 );
 ```
 
+## Memory Management
+
+If you create custom instances of `InternetConnection` using `createInstance()`, you should proactively free up resources when the instance is no longer needed to prevent memory leaks (e.g., lingering timers and unclosed stream controllers).
+
+```dart
+final customConnection = InternetConnection.createInstance();
+
+// When done with the instance:
+await customConnection.dispose();
+```
+
+> [!WARNING]
+>
+> **Never call `dispose()` on the global singleton (`InternetConnection()`).**
+>
+> The singleton is designed to live throughout the entire lifecycle of your application. Disposing of it will permanently close its internal streams and break any other parts of your app that rely on it.
+
 ### Custom HTTP Client Implementation
 
 Integrate existing networking clients (like `dio`) to maintain consistent
