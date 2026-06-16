@@ -133,7 +133,7 @@ final connection = InternetConnection.createInstance(
 );
 ```
 
-## Memory Management
+### Memory Management
 
 If you create custom instances of `InternetConnection` using `createInstance()`, you should proactively free up resources when the instance is no longer needed to prevent memory leaks (e.g., lingering timers and unclosed stream controllers).
 
