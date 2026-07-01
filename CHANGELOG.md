@@ -1,3 +1,7 @@
+## 3.1.1
+
+- perf: reuse http client to prevent TLS handshake on every check in [95afc26](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/95afc26)
+
 ## 3.1.0
 
 - feat: dispose method to free up resources in [b246b22](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/b246b22)
