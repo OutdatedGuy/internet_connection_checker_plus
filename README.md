@@ -135,7 +135,10 @@ final connection = InternetConnection.createInstance(
 
 ### Memory Management
 
-If you create custom instances of `InternetConnection` using `createInstance()`, you should proactively free up resources when the instance is no longer needed to prevent memory leaks (e.g., lingering timers and unclosed stream controllers).
+If you create custom instances of `InternetConnection` using `createInstance()`,
+you should proactively free up resources when the instance is no longer needed
+to prevent memory leaks (e.g., lingering timers and unclosed stream
+controllers).
 
 ```dart
 final customConnection = InternetConnection.createInstance();
@@ -148,7 +151,9 @@ await customConnection.dispose();
 >
 > **Never call `dispose()` on the global singleton (`InternetConnection()`).**
 >
-> The singleton is designed to live throughout the entire lifecycle of your application. Disposing of it will permanently close its internal streams and break any other parts of your app that rely on it.
+> The singleton is designed to live throughout the entire lifecycle of your
+> application. Disposing of it will permanently close its internal streams and
+> break any other parts of your app that rely on it.
 
 ### Custom HTTP Client Implementation
 
@@ -248,9 +253,14 @@ class _MyWidgetState extends State<MyWidget> {
 
 ## For Third-Party Package Developers
 
-If you are building a package, plugin, or library that depends on `internet_connection_checker_plus`, **do not use the singleton instance** (`InternetConnection()`).
+If you are building a package, plugin, or library that depends on
+`internet_connection_checker_plus`, **do not use the singleton instance**
+(`InternetConnection()`).
 
-If your package alters the singleton's configuration or accidentally calls `dispose()` on it, you will introduce side effects that break the host application using your package. Instead, always instantiate a dedicated checker using `createInstance()` and manage its lifecycle entirely within your package.
+If your package alters the singleton's configuration or accidentally calls
+`dispose()` on it, you will introduce side effects that break the host
+application using your package. Instead, always instantiate a dedicated checker
+using `createInstance()` and manage its lifecycle entirely within your package.
 
 ```dart
 class MyCustomPackageService {
