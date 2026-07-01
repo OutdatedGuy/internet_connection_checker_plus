@@ -137,6 +137,11 @@ class InternetConnection {
   /// The singleton instance of [InternetConnection].
   static final _instance = InternetConnection.createInstance();
 
+  /// The HTTP client used for making network requests.
+  /// Reusing this client might prevent unnecessary TCP/TLS handshakes on every
+  /// check.
+  late final _httpClient = http.Client();
+
   /// The duration between consecutive status checks.
   ///
   /// Defaults to [_defaultCheckInterval].
@@ -183,7 +188,7 @@ class InternetConnection {
         return customConnectivityCheck!.call(option);
       }
 
-      final response = await http
+      final response = await _httpClient
           .head(option.uri, headers: option.headers)
           .timeout(option.timeout);
 
@@ -323,5 +328,6 @@ class InternetConnection {
   Future<void> dispose() async {
     await _handleStatusChangeCancel();
     await _statusController.close();
+    _httpClient.close();
   }
 }
