@@ -84,6 +84,15 @@ class InternetConnection {
   /// connectivity checks instead of the default HTTP HEAD request
   /// implementation.
   ///
+  /// The [backoffOptions] enables exponential backoff for the polling
+  /// interval used by [onStatusChange]. Defaults to `null`, which preserves
+  /// the existing fixed-[checkInterval] polling behaviour exactly. When
+  /// provided, the delay grows on consecutive failures (as configured by
+  /// [ExponentialBackoffOptions]), resets to [checkInterval] as soon as the
+  /// connection is restored, and resets to the configured initial delay
+  /// whenever [setIntervalAndResetTimer] is called or the last listener
+  /// cancels.
+  ///
   /// Make sure to call [dispose] when this instance is no longer needed to free
   /// up resources.
   InternetConnection.createInstance({
@@ -93,7 +102,12 @@ class InternetConnection {
     this.enableStrictCheck = false,
     this.customConnectivityCheck,
     this.triggerStream,
+    this.backoffOptions,
   })  : _checkInterval = checkInterval ?? _defaultCheckInterval,
+        _currentBackoffDelay = backoffOptions?.resolveInitialDelay(
+              checkInterval ?? _defaultCheckInterval,
+            ) ??
+            Duration.zero,
         assert(
           useDefaultOptions || customCheckOptions?.isNotEmpty == true,
           'You must provide a list of options if you are not using the '
@@ -170,11 +184,41 @@ class InternetConnection {
   /// whenever it emits an event.
   final Stream? triggerStream;
 
+  /// The exponential backoff configuration for the polling interval used by
+  /// [onStatusChange].
+  ///
+  /// When `null` (the default), the polling interval stays fixed at
+  /// [checkInterval]. When provided, the delay grows on consecutive failures
+  /// and resets to [checkInterval] when the connection is restored.
+  final ExponentialBackoffOptions? backoffOptions;
+
+  /// Whether the backoff state was forcefully reset by an interval change.
+  bool _backoffNeedsReset = false;
+
+  /// The live backoff delay, updated each polling cycle when [backoffOptions]
+  /// is set.
+  ///
+  /// Resets to the configured initial delay on reconnect or subscription
+  /// cancel.
+  Duration _currentBackoffDelay;
+
   /// The last known internet connection status result.
   InternetStatus? _lastStatus;
 
   /// The handle for the timer used for periodic status checks.
   Timer? _timerHandle;
+
+  /// A counter that goes up by 1 every time something reschedules the
+  /// polling timer directly, i.e. [setIntervalAndResetTimer] or a listener
+  /// cancelling (see [_handleStatusChangeCancel]).
+  ///
+  /// [_maybeEmitStatusUpdate] reads this value before it starts checking the
+  /// connection, then compares it again after the check finishes. If the
+  /// numbers don't match, someone else already changed the backoff state and
+  /// scheduled its own timer while the check was still running, so this (now
+  /// outdated) run must not touch [_currentBackoffDelay]/[_backoffNeedsReset]
+  /// or schedule another timer on top of it.
+  int _timerVersion = 0;
 
   /// Checks if the [Uri] specified in [option] is reachable.
   ///
@@ -208,12 +252,25 @@ class InternetConnection {
   /// resets the connection checking timer.
   void setIntervalAndResetTimer(Duration duration) {
     _checkInterval = duration;
+    if (backoffOptions != null) {
+      _currentBackoffDelay = backoffOptions!.resolveInitialDelay(duration);
+      _backoffNeedsReset = true;
+    }
+    _timerVersion++;
     _timerHandle?.cancel();
     _timerHandle = Timer(_checkInterval, _maybeEmitStatusUpdate);
   }
 
   /// Returns the current duration between connection checks.
   Duration get checkInterval => _checkInterval;
+
+  /// Returns the delay that will be used before the next poll when
+  /// [backoffOptions] is set.
+  ///
+  /// Exposed so apps can surface "retrying in Xs" style UI. Resets to the
+  /// configured initial delay on reconnect, on [setIntervalAndResetTimer],
+  /// and when the last listener cancels.
+  Duration get currentBackoffDelay => _currentBackoffDelay;
 
   /// Checks if there is internet access by verifying connectivity to the
   /// specified [Uri]s.
@@ -269,6 +326,12 @@ class InternetConnection {
 
     if (!_statusController.hasListener) return;
 
+    final timerVersion = _timerVersion;
+
+    // Snapshot before possible mutation below — needed to detect first-failure
+    // vs. ongoing-failure for backoff calculation.
+    final previousStatus = _lastStatus;
+
     final currentStatus = await internetStatus;
 
     if (_lastStatus != currentStatus && _statusController.hasListener) {
@@ -276,7 +339,36 @@ class InternetConnection {
       _statusController.add(currentStatus);
     }
 
-    _timerHandle = Timer(_checkInterval, _maybeEmitStatusUpdate);
+    // If setIntervalAndResetTimer ran (or a listener cancelled) while the
+    // check above was running, it already updated the backoff state and
+    // scheduled its own timer. Touching that state or scheduling another
+    // timer here would silently undo what it just set up.
+    if (_timerVersion != timerVersion) return;
+
+    Duration nextDelay;
+    final options = backoffOptions;
+    if (options == null) {
+      nextDelay = _checkInterval;
+    } else if (currentStatus == InternetStatus.connected) {
+      _currentBackoffDelay = options.resolveInitialDelay(_checkInterval);
+      nextDelay = _checkInterval;
+    } else {
+      // A failure is either the first in a new streak — previousStatus is
+      // null (first ever poll) or connected, or _backoffNeedsReset was set
+      // by setIntervalAndResetTimer/a new subscription — or an ongoing
+      // streak, in which case the delay keeps growing.
+      final isFirstFailure =
+          previousStatus != InternetStatus.disconnected || _backoffNeedsReset;
+      _backoffNeedsReset = false;
+      _currentBackoffDelay = options.nextDelay(
+        current: _currentBackoffDelay,
+        isFirstFailure: isFirstFailure,
+        checkInterval: _checkInterval,
+      );
+      nextDelay = _currentBackoffDelay;
+    }
+
+    _timerHandle = Timer(nextDelay, _maybeEmitStatusUpdate);
   }
 
   /// Handles cancellation of status change events.
@@ -285,9 +377,15 @@ class InternetConnection {
   Future<void> _handleStatusChangeCancel() async {
     await _triggerSubscription?.cancel();
     _triggerSubscription = null;
+    _timerVersion++;
     _timerHandle?.cancel();
     _timerHandle = null;
     _lastStatus = null;
+    _backoffNeedsReset = false;
+    if (backoffOptions != null) {
+      _currentBackoffDelay =
+          backoffOptions!.resolveInitialDelay(_checkInterval);
+    }
   }
 
   /// The result of the last attempt to check the internet status.

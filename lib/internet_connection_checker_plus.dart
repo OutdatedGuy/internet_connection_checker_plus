@@ -60,7 +60,9 @@ library internet_connection_checker_plus;
 import 'dart:async';
 
 import 'package:http/http.dart' as http;
+import 'package:meta/meta.dart';
 
+part 'src/exponential_backoff_options.dart';
 part 'src/internet_check_option.dart';
 part 'src/internet_check_result.dart';
 part 'src/internet_connection.dart';
