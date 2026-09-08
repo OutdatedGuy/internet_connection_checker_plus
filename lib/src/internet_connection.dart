@@ -185,7 +185,7 @@ class InternetConnection {
   ) async {
     try {
       if (customConnectivityCheck != null) {
-        return customConnectivityCheck!.call(option);
+        return await customConnectivityCheck!.call(option);
       }
 
       final response = await _httpClient
