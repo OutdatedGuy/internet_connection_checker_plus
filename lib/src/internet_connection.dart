@@ -176,6 +176,16 @@ class InternetConnection {
   /// The handle for the timer used for periodic status checks.
   Timer? _timerHandle;
 
+  /// A counter that goes up by 1 every time a listener cancels its
+  /// subscription (see [_handleStatusChangeCancel]).
+  ///
+  /// [_maybeEmitStatusUpdate] reads this value before it starts checking the
+  /// connection, then compares it again after the check finishes. If the
+  /// numbers don't match, a cancel (and possibly a resubscribe) happened
+  /// while the check was still running, so that check's result is thrown
+  /// away instead of being sent to whoever is listening now.
+  int _subscriptionVersion = 0;
+
   /// Checks if the [Uri] specified in [option] is reachable.
   ///
   /// Returns a [Future] that completes with an [InternetCheckResult] indicating
@@ -269,9 +279,16 @@ class InternetConnection {
 
     if (!_statusController.hasListener) return;
 
+    final previousSubVersion = _subscriptionVersion;
+
     final currentStatus = await internetStatus;
 
-    if (_lastStatus != currentStatus && _statusController.hasListener) {
+    if (!_statusController.hasListener ||
+        _subscriptionVersion != previousSubVersion) {
+      return;
+    }
+
+    if (_lastStatus != currentStatus) {
       _lastStatus = currentStatus;
       _statusController.add(currentStatus);
     }
@@ -283,11 +300,12 @@ class InternetConnection {
   ///
   /// Cancels the timer and resets the last status.
   Future<void> _handleStatusChangeCancel() async {
-    await _triggerSubscription?.cancel();
-    _triggerSubscription = null;
+    _subscriptionVersion++;
     _timerHandle?.cancel();
     _timerHandle = null;
     _lastStatus = null;
+    await _triggerSubscription?.cancel();
+    _triggerSubscription = null;
   }
 
   /// The result of the last attempt to check the internet status.
