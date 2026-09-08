@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:test/test.dart';
 
@@ -270,6 +272,139 @@ void main() {
       expect(checker, isNot(InternetConnection.createInstance()));
 
       await checker.dispose();
+    });
+
+    group('onStatusChange', () {
+      test(
+          'cancelled in-flight check does not emit stale result to new subscriber',
+          () async {
+        // Use a gate to keep the first check suspended while we cancel and
+        // resubscribe, then release it to verify the stale result is dropped.
+        final checkGate = Completer<void>();
+        var checkCount = 0;
+
+        final checker = InternetConnection.createInstance(
+          checkInterval: const Duration(seconds: 10),
+          useDefaultOptions: false,
+          customCheckOptions: [
+            InternetCheckOption(uri: Uri.parse('https://example.com')),
+          ],
+          customConnectivityCheck: (opt) async {
+            final mine = ++checkCount;
+            if (mine == 1) await checkGate.future; // stale check is paused
+            // check 1 → connected (stale), check 2 → disconnected (fresh)
+            return InternetCheckResult(option: opt, isSuccess: mine == 1);
+          },
+        );
+
+        // Subscribe — starts the first (paused) check.
+        final sub1 = checker.onStatusChange.listen((_) {});
+        await Future.microtask(() {});
+
+        // Cancel before the first check resolves.
+        await sub1.cancel();
+
+        // Resubscribe — starts the second (immediate, disconnected) check.
+        final received = <InternetStatus>[];
+        final sub2 = checker.onStatusChange.listen(received.add);
+
+        // Let the second check complete.
+        await Future.delayed(const Duration(milliseconds: 50));
+
+        // Release the stale first check.
+        checkGate.complete();
+        await Future.delayed(const Duration(milliseconds: 50));
+
+        // Only the fresh (disconnected) result should have been emitted.
+        expect(received, [InternetStatus.disconnected]);
+
+        await sub2.cancel();
+        await checker.dispose();
+      });
+
+      test('does not restart the timer if cancelled while a check is in-flight',
+          () async {
+        final checkGate = Completer<void>();
+        var checkCount = 0;
+
+        final checker = InternetConnection.createInstance(
+          checkInterval: const Duration(milliseconds: 50),
+          useDefaultOptions: false,
+          customCheckOptions: [
+            InternetCheckOption(uri: Uri.parse('https://example.com')),
+          ],
+          customConnectivityCheck: (opt) async {
+            checkCount++;
+            if (checkCount == 1) await checkGate.future;
+            return InternetCheckResult(option: opt, isSuccess: true);
+          },
+        );
+
+        final sub = checker.onStatusChange.listen((_) {});
+        await Future.microtask(() {});
+
+        // Cancel while the first check is still in-flight.
+        await sub.cancel();
+
+        // Release the in-flight check now that there are no listeners.
+        checkGate.complete();
+        await Future.delayed(const Duration(milliseconds: 200));
+
+        // No listener ever subscribed again, so no further checks should
+        // have been triggered by a lingering timer.
+        expect(checkCount, 1);
+
+        await checker.dispose();
+      });
+
+      test('does not leave a stale timer when the interval changes mid-check',
+          () async {
+        // The first check is held open so setIntervalAndResetTimer can run
+        // while it is still in flight; the second one is never released so
+        // the timer scheduled by the interval change can be observed firing.
+        final firstCheck = Completer<void>();
+        final secondCheck = Completer<void>();
+        var checkCount = 0;
+
+        final checker = InternetConnection.createInstance(
+          checkInterval: const Duration(milliseconds: 100),
+          useDefaultOptions: false,
+          customCheckOptions: [
+            InternetCheckOption(uri: Uri.parse('https://example.com')),
+          ],
+          customConnectivityCheck: (opt) async {
+            final mine = ++checkCount;
+            if (mine == 1) await firstCheck.future;
+            if (mine == 2) await secondCheck.future;
+            return InternetCheckResult(option: opt, isSuccess: true);
+          },
+        );
+
+        final sub1 = checker.onStatusChange.listen((_) {});
+        await Future.microtask(() {});
+        expect(checkCount, 1);
+
+        // Reschedules the timer while the first check is still running.
+        checker.setIntervalAndResetTimer(const Duration(milliseconds: 100));
+
+        // Letting the first check finish must not orphan that timer.
+        firstCheck.complete();
+        await Future.delayed(const Duration(milliseconds: 10));
+
+        // Cancelling can only reach the timer that _timerHandle points at.
+        await sub1.cancel();
+
+        // Resubscribe and leave the check in flight, so an orphaned timer
+        // firing here would start a second, concurrent check.
+        final sub2 = checker.onStatusChange.listen((_) {});
+        await Future.delayed(const Duration(milliseconds: 200));
+
+        expect(checkCount, 2);
+
+        secondCheck.complete();
+        await sub2.cancel();
+        await checker.dispose();
+      });
     });
   });
 }
