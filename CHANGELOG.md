@@ -1,3 +1,7 @@
+## 3.1.2
+
+- fix: returning a 'Future' without 'await' inside a try block in [715e676](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/715e676)
+
 ## 3.1.1
 
 - perf: reuse http client to prevent TLS handshake on every check in [95afc26](https://github.com/OutdatedGuy/internet_connection_checker_plus/commit/95afc26)
